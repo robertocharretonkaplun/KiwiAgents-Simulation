@@ -1,36 +1,77 @@
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Controller : MonoBehaviour
 {
-    private Rigidbody rb;
-    public float speed;
-    public float angspeed;
-    private float movx;
-    public float movy;
+    
 
-    void Start()
-    {
-        rb = gameObject.GetComponent<Rigidbody>();
-    }
+    CustomAccion input;
+    public NavMeshAgent agent;
+
+    [Header("Movement")]
+    [SerializeField] ParticleSystem clickEfect;
+    [SerializeField] LayerMask clickableLayer;
+
+    float lookRotationSpeed = 8f;
+
+  
+
 
     public static Controller instance;
 
     private void Awake()
     {
         instance = this;
-    }
+        agent = GetComponent<NavMeshAgent>();
+        input= new CustomAccion();
+        AssingInputs();
 
-    void Update()
+    }
+    private void Update()
     {
-        movx = Input.GetAxis("Horizontal"); 
-        movy = Input.GetAxis("Vertical");
-
-        if(movy != 0)
-        {
-            Vector3 movement = transform.right * movy * speed * Time.deltaTime;
-            rb.linearVelocity = movement;
-        }
-
-        transform.Rotate(0, movx * angspeed * Time.deltaTime, 0);
+        FaceTarget();
+        
     }
-}
+    void AssingInputs()
+    {
+        input.Main.Move.performed += ctx => ClicKToMove();
+    }
+
+    void ClicKToMove()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, clickableLayer))
+        {
+            agent.destination = hit.point;
+            if (clickEfect != null)
+            {
+                ParticleSystem Effect = Instantiate(clickEfect, hit.point += new Vector3(0, 0.1f, 0), clickEfect.transform.rotation);
+                Destroy(Effect.gameObject, Effect.main.duration);
+            }
+        }
+    }
+
+    void OnEnable()
+    {
+        input.Enable(); 
+    }
+
+    void OnDisable()
+    {
+        input.Disable();
+    }
+
+
+    void FaceTarget()
+    {
+        // Calcula la dirección hacia el destino
+        Vector3 direccion = (agent.destination - transform.position).normalized;
+
+        // Calcula la rotación que debe tener el objeto para mirar hacia la dirección
+        Quaternion lookRotation = Quaternion.LookRotation(direccion);
+
+        // Interpola suavemente la rotación actual hacia la nueva rotación
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * lookRotationSpeed);
+    }
+} 

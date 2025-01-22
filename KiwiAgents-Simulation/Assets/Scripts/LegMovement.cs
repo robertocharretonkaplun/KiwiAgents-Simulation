@@ -25,7 +25,7 @@ public class LegMovement : MonoBehaviour
     {
         get
         {
-            return Controller.instance.movy;
+            return Controller.instance.agent.velocity.y;
         }
     }
 
