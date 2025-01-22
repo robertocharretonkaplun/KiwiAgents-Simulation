@@ -53,6 +53,27 @@ public class InverseKinematic : MonoBehaviour
         Init();
     }
 
+    void OnDrawGizmos()
+    {
+#if UNITY_EDITOR
+        var current = this.transform;
+        for (int i = 0; i < ChainLength && current != null && current.parent != null; i++)
+        {
+            var scale = Vector3.Distance(current.position, current.parent.position) * 0.1f;
+            Handles.matrix = Matrix4x4.TRS(current.position, Quaternion.FromToRotation(Vector3.up, current.parent.position - current.position), new Vector3(scale, Vector3.Distance(current.parent.position, current.position), scale));
+            Handles.color = Color.green;
+            Handles.DrawWireCube(Vector3.up * 0.5f, Vector3.one);
+            current = current.parent;
+        }
+#endif
+    }
+
+    // Update is called once per frame
+    void LateUpdate()
+    {
+        ResolveIK();
+    }
+
     void Init()
     {
         //initial array
@@ -106,12 +127,6 @@ public class InverseKinematic : MonoBehaviour
 
 
 
-    }
-
-    // Update is called once per frame
-    void LateUpdate()
-    {
-        ResolveIK();
     }
 
     private void ResolveIK()
@@ -229,19 +244,5 @@ public class InverseKinematic : MonoBehaviour
             current.rotation = Root.rotation * rotation;
     }
 
-    void OnDrawGizmos()
-    {
-#if UNITY_EDITOR
-        var current = this.transform;
-        for (int i = 0; i < ChainLength && current != null && current.parent != null; i++)
-        {
-            var scale = Vector3.Distance(current.position, current.parent.position) * 0.1f;
-            Handles.matrix = Matrix4x4.TRS(current.position, Quaternion.FromToRotation(Vector3.up, current.parent.position - current.position), new Vector3(scale, Vector3.Distance(current.parent.position, current.position), scale));
-            Handles.color = Color.green;
-            Handles.DrawWireCube(Vector3.up * 0.5f, Vector3.one);
-            current = current.parent;
-        }
-#endif
-    }
 
 }
