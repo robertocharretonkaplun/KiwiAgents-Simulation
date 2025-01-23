@@ -37,14 +37,14 @@ public class InverseKinematic : MonoBehaviour
     public float SnapBackStrength = 1f;
 
 
-    protected float[] BonesLength; //Target to Origin
-    protected float CompleteLength;
+    protected float[] BonesLength; // Target to Origin
+    protected float CompleteLength; // Total length of the entire chain
     protected Transform[] Bones;
-    protected Vector3[] Positions;
-    protected Vector3[] StartDirectionSucc;
-    protected Quaternion[] StartRotationBone;
+    protected Vector3[] Positions; // Positions for each bone
+    protected Vector3[] StartDirectionSucc; // Initial directions between each pair of bones
+    protected Quaternion[] StartRotationBone; // Initial rotation of each bone
     protected Quaternion StartRotationTarget;
-    protected Transform Root;
+    protected Transform Root; // Root of the chain
 
 
     // Start is called before the first frame update
@@ -53,6 +53,9 @@ public class InverseKinematic : MonoBehaviour
         Init();
     }
 
+    /// <summary>
+    /// Visualization of the chain in the scene view
+    /// </summary>
     void OnDrawGizmos()
     {
 #if UNITY_EDITOR
@@ -74,6 +77,9 @@ public class InverseKinematic : MonoBehaviour
         ResolveIK();
     }
 
+    /// <summary>
+    /// Initializes the Inverse Kinematic chain, calculating bone lengths, directions, and rotations.
+    /// </summary>
     void Init()
     {
         //initial array
@@ -129,6 +135,9 @@ public class InverseKinematic : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Solve the IK chain using a frabrik algorithm to align bones with the target.
+    /// </summary>
     private void ResolveIK()
     {
         if (Target == null)
@@ -211,6 +220,16 @@ public class InverseKinematic : MonoBehaviour
         }
     }
 
+
+    /*
+     * Para representar posiciones y rotaciones en el código se utiliza el espacio local
+     * de la raíz, no el global. Esto quiere decir que se toma la raíz como si fuera el
+     * origen de transformación, es decir (0,0,0).
+     */
+
+    /// <summary>
+    /// Gets the position of a transform in the space of the root.
+    /// </summary>
     private Vector3 GetPositionRootSpace(Transform current)
     {
         if (Root == null)
@@ -219,6 +238,9 @@ public class InverseKinematic : MonoBehaviour
             return Quaternion.Inverse(Root.rotation) * (current.position - Root.position);
     }
 
+    /// <summary>
+    /// Sets the position of a transform in the root's space.
+    /// </summary>
     private void SetPositionRootSpace(Transform current, Vector3 position)
     {
         if (Root == null)
@@ -227,6 +249,9 @@ public class InverseKinematic : MonoBehaviour
             current.position = Root.rotation * position + Root.position;
     }
 
+    /// <summary>
+    /// Gets the rotation of a transform in the root's space.
+    /// </summary>
     private Quaternion GetRotationRootSpace(Transform current)
     {
         //inverse(after) * before => rot: before -> after
@@ -236,6 +261,9 @@ public class InverseKinematic : MonoBehaviour
             return Quaternion.Inverse(current.rotation) * Root.rotation;
     }
 
+    /// <summary>
+    /// Sets the rotation of a transform in the root's space.
+    /// </summary>
     private void SetRotationRootSpace(Transform current, Quaternion rotation)
     {
         if (Root == null)
