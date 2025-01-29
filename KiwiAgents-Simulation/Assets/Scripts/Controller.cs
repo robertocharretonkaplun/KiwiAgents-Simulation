@@ -24,18 +24,19 @@ public class Controller : MonoBehaviour
         }
 
         instance = this;
+
+        // Asignar una accion personalizada en nuestra input action
+        input = new CustomAccion();
     }
 
     private void Start()
     {
-        // Asignar la referencia del NavMeshAgent
-        if (agent = GetComponent<NavMeshAgent>())
+        // Asignar la referencia del NavMeshAgent y comprobar que no sea nulo
+        agent = GetComponent<NavMeshAgent>();
+        if (agent == null)
         {
             Debug.LogError("Agent was null, check for component.");
         }
-
-        // Asignar una accion personalizada en nuestra input action
-        input = new CustomAccion();
 
         // Asignar inputs de usuario
         AssingInputs();
