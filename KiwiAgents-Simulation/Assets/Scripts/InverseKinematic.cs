@@ -11,7 +11,8 @@ public class InverseKinematic : MonoBehaviour
     /// <summary>
     /// Chain length of bones
     /// </summary>
-    public int ChainLength = 2;
+    public int ChainLength = 2
+        ;
 
     /// <summary>
     /// Target the chain should bent to
