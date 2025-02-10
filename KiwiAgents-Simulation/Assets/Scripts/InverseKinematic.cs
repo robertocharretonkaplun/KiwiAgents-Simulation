@@ -15,7 +15,7 @@ public class InverseKinematic : MonoBehaviour
         ;
 
     /// <summary>
-    /// Target the chain should bent to
+    /// Target the chain should be bent to
     /// </summary>
     public Transform Target;
     public Transform Pole;
@@ -40,11 +40,11 @@ public class InverseKinematic : MonoBehaviour
 
     protected float[] BonesLength; // Target to Origin
     protected float CompleteLength; // Total length of the entire chain
-    protected Transform[] Bones;
+    protected Transform[] Bones; // Array of bone transforms in the chain
     protected Vector3[] Positions; // Positions for each bone
     protected Vector3[] StartDirectionSucc; // Initial directions between each pair of bones
     protected Quaternion[] StartRotationBone; // Initial rotation of each bone
-    protected Quaternion StartRotationTarget;
+    protected Quaternion StartRotationTarget; // Initial rotation of the target
     protected Transform Root; // Root of the chain
 
 
@@ -137,7 +137,7 @@ public class InverseKinematic : MonoBehaviour
     }
 
     /// <summary>
-    /// Solve the IK chain using a frabrik algorithm to align bones with the target.
+    /// Solve the IK chain using a fabrik algorithm to align bones with the target.
     /// </summary>
     private void ResolveIK()
     {
@@ -163,7 +163,7 @@ public class InverseKinematic : MonoBehaviour
         //1st is possible to reach?
         if ((targetPosition - GetPositionRootSpace(Bones[0])).sqrMagnitude >= CompleteLength * CompleteLength)
         {
-            //just strech it
+            //just stretch it
             var direction = (targetPosition - Positions[0]).normalized;
             //set everything after root
             for (int i = 1; i < Positions.Length; i++)
@@ -223,9 +223,9 @@ public class InverseKinematic : MonoBehaviour
 
 
     /*
-     * Para representar posiciones y rotaciones en el código se utiliza el espacio local
-     * de la raíz, no el global. Esto quiere decir que se toma la raíz como si fuera el
-     * origen de transformación, es decir (0,0,0).
+     *  To represent positions and rotations in the code we use the local space
+     * of the root, not the global one. This means that the root is taken as if it were the
+     *  transformation origin, i.e. (0,0,0).
      */
 
     /// <summary>

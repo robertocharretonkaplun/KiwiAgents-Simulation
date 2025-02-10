@@ -3,7 +3,7 @@ using static UnityEngine.GraphicsBuffer;
 
 public class LegMovement : MonoBehaviour
 {
-    // GamObjects and layers
+    // GameObjects and layers
     public GameObject player;
     public LayerMask mask;
 
@@ -105,14 +105,14 @@ public class LegMovement : MonoBehaviour
 
     /// <summary>
     /// Calculates each movement of the leg to the specified position in a stepping motion.
-    /// Handles upward movement, downward movement, and leg syncronization.
+    /// Handles upward movement, downward movement, and leg synchronization.
     /// </summary>
     public void Step(Vector3 position)
     {
         // Validates if this leg is allowed to move based on the currentMoveValue
         if (currentMoveValue == moveValue)
         {
-            // Mark the leg as not grounded and start teh movement
+            // Mark the leg as not grounded and start the movement
             legGrounded = false;
             hasMoved = false;
             moving = true;
@@ -134,7 +134,7 @@ public class LegMovement : MonoBehaviour
                 restingPos = Vector3.MoveTowards(target.position, position, speed * Time.deltaTime);
             }
 
-            // If the the leg reaches the final position
+            // If the leg reaches the final position
             if (target.position == position)
             {
                 // Mark the leg as grounded again and stop the movement
@@ -144,7 +144,7 @@ public class LegMovement : MonoBehaviour
                 movingDown = false;
 
                 // If both legs have completed their movements, update the currentMoveValue
-                // to allow the other leg to move next.
+                // To allow the other leg to move next.
                 // The code was intended for a spider, but this is not necessary for a bipedal agent.
                 if (currentMoveValue == moveValue && otherLeg.hasMoved == true)
                 {

@@ -25,20 +25,20 @@ public class Controller : MonoBehaviour
 
         instance = this;
 
-        // Asignar una accion personalizada en nuestra input action
+        // Assign a custom action in our input action
         input = new CustomAccion();
     }
 
     private void Start()
     {
-        // Asignar la referencia del NavMeshAgent y comprobar que no sea nulo
+        // Assign the NavMeshAgent reference and check that it is not null
         agent = GetComponent<NavMeshAgent>();
         if (agent == null)
         {
             Debug.LogError("Agent was null, check for component.");
         }
 
-        // Asignar inputs de usuario
+        // Assign user inputs
         AssingInputs();
     }
 
@@ -58,8 +58,8 @@ public class Controller : MonoBehaviour
     }
 
     /// <summary>
-    /// Configura los inputs necesarios para el control del movimiento del agente y
-    /// asigna un evento al input de clic que llama al método mueve al agente.
+    /// Configures the inputs necessary to control the agent's movement and
+    /// assigns an event to the click input that calls the move agent method.
     /// </summary>
     void AssingInputs()
     {
@@ -67,9 +67,9 @@ public class Controller : MonoBehaviour
     }
 
     /// <summary>
-    /// Se crea un raycast desde la posición del mpouse para mover el agente.
-    /// Si se detecta una superficie en la parte seleccionada, el agente se moverá 
-    /// hacia ese punto, generando unas partículas en donde se dio click.
+    /// A raycast is created from the mouse position to move the agent.
+    /// If a surface is detected in the selected part, the agent will move, 
+    /// towards that point, generating particles where it was clicked.
     /// </summary>
     void ClicKToMove()
     {
@@ -86,18 +86,18 @@ public class Controller : MonoBehaviour
     }
 
     /// <summary>
-    /// Rota al agente hacia la dirección del destino. 
-    /// Se hace mediante una interpolación para que el movimiento sea suave.
+    /// Rotates the agent in the direction of the destination. 
+    /// This is done by interpolation for smooth movement.
     /// </summary>
     void FaceTarget()
     {
-        // Calcula la dirección hacia el destino
+        // Calculates the direction to the destination
         Vector3 direccion = (agent.destination - transform.position).normalized;
 
-        // Calcula la rotación que debe tener el objeto para mirar hacia la dirección
+        // Calculates the rotation that the object must have to face the direction of rotation
         Quaternion lookRotation = Quaternion.LookRotation(direccion);
 
-        // Interpola suavemente la rotación actual hacia la nueva rotación
+        // Smoothly interpolates the current rotation to the new rotation
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * lookRotationSpeed);
     }
 }
