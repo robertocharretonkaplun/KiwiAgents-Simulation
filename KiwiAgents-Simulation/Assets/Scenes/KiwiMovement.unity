@@ -5879,6 +5879,37 @@ Transform:
   - {fileID: 1833016193}
   m_Father: {fileID: 73828377}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1560727813
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1560727814}
+  m_Layer: 0
+  m_Name: PoopPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 6519382022992737161, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1560727814
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1560727813}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.000000007946631, y: -3.6637356e-15, z: -1.998401e-15, w: 1}
+  m_LocalPosition: {x: -0.0394, y: 0.0184, z: -0.0299}
+  m_LocalScale: {x: 0.04921259, y: 0.04921259, z: 0.04921259}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3689416985821720532}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1616251714
 GameObject:
   m_ObjectHideFlags: 0
@@ -7911,6 +7942,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6709331122872712793}
+  - {fileID: 1560727814}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &3689942726442445180
@@ -8287,6 +8319,7 @@ GameObject:
   - component: {fileID: 5113153617475494798}
   - component: {fileID: 5113153617475494800}
   - component: {fileID: 5113153617475494799}
+  - component: {fileID: 5113153617475494801}
   m_Layer: 0
   m_Name: Kiwi LowPoly
   m_TagString: Untagged
@@ -8381,6 +8414,20 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &5113153617475494801
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5113153617475494795}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27ecc397ef25a4443aaed3fc2cee500a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Poop: {fileID: 2447766078723701400, guid: 183e65d9be9dcfc4f980677dea18ad8e, type: 3}
+  PoopPosition: {fileID: 1560727813}
 --- !u!4 &5147694949852741726
 Transform:
   m_ObjectHideFlags: 0

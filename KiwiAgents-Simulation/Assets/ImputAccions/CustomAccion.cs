@@ -35,6 +35,15 @@ public partial class @CustomAccion: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Poop"",
+                    ""type"": ""Button"",
+                    ""id"": ""44733107-1328-47fd-b8a4-81c87ef22483"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -48,6 +57,17 @@ public partial class @CustomAccion: IInputActionCollection2, IDisposable
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""737cfc43-96b7-4bca-960d-4950557dc911"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Poop"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -57,6 +77,7 @@ public partial class @CustomAccion: IInputActionCollection2, IDisposable
         // Main
         m_Main = asset.FindActionMap("Main", throwIfNotFound: true);
         m_Main_Move = m_Main.FindAction("Move", throwIfNotFound: true);
+        m_Main_Poop = m_Main.FindAction("Poop", throwIfNotFound: true);
     }
 
     ~@CustomAccion()
@@ -124,11 +145,13 @@ public partial class @CustomAccion: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Main;
     private List<IMainActions> m_MainActionsCallbackInterfaces = new List<IMainActions>();
     private readonly InputAction m_Main_Move;
+    private readonly InputAction m_Main_Poop;
     public struct MainActions
     {
         private @CustomAccion m_Wrapper;
         public MainActions(@CustomAccion wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Main_Move;
+        public InputAction @Poop => m_Wrapper.m_Main_Poop;
         public InputActionMap Get() { return m_Wrapper.m_Main; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -141,6 +164,9 @@ public partial class @CustomAccion: IInputActionCollection2, IDisposable
             @Move.started += instance.OnMove;
             @Move.performed += instance.OnMove;
             @Move.canceled += instance.OnMove;
+            @Poop.started += instance.OnPoop;
+            @Poop.performed += instance.OnPoop;
+            @Poop.canceled += instance.OnPoop;
         }
 
         private void UnregisterCallbacks(IMainActions instance)
@@ -148,6 +174,9 @@ public partial class @CustomAccion: IInputActionCollection2, IDisposable
             @Move.started -= instance.OnMove;
             @Move.performed -= instance.OnMove;
             @Move.canceled -= instance.OnMove;
+            @Poop.started -= instance.OnPoop;
+            @Poop.performed -= instance.OnPoop;
+            @Poop.canceled -= instance.OnPoop;
         }
 
         public void RemoveCallbacks(IMainActions instance)
@@ -168,5 +197,6 @@ public partial class @CustomAccion: IInputActionCollection2, IDisposable
     public interface IMainActions
     {
         void OnMove(InputAction.CallbackContext context);
+        void OnPoop(InputAction.CallbackContext context);
     }
 }
