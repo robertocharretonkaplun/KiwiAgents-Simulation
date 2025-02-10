@@ -1,6 +1,4 @@
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class Controller : MonoBehaviour
 {
@@ -8,43 +6,44 @@ public class Controller : MonoBehaviour
 
     [Header("Agente")]
     CustomAccion input;
-    public NavMeshAgent agent;
+    public Rigidbody rb;
 
     [Header("Movement")]
-    [SerializeField] ParticleSystem clickEfect;
+    [SerializeField] ParticleSystem clickEffect;
     [SerializeField] LayerMask clickableLayer;
-
+    public float jumpForce = 5f;
+    public float moveSpeed = 5f;
     float lookRotationSpeed = 8f;
+
+    private Vector3 targetPosition;
+    private bool isMoving = false;
+    private bool isGrounded;
 
     private void Awake()
     {
         if (instance != null && instance != this)
         {
+            Destroy(gameObject);
             return;
         }
 
         instance = this;
-
-        // Assign a custom action in our input action
         input = new CustomAccion();
     }
 
     private void Start()
     {
-        // Assign the NavMeshAgent reference and check that it is not null
-        agent = GetComponent<NavMeshAgent>();
-        if (agent == null)
-        {
-            Debug.LogError("Agent was null, check for component.");
-        }
-
-        // Assign user inputs
+        rb = GetComponent<Rigidbody>();
         AssingInputs();
+        targetPosition = transform.position;
     }
 
     private void Update()
     {
-        FaceTarget();
+        if (isMoving)
+        {
+            FaceTarget();
+        }
     }
 
     void OnEnable()
@@ -58,46 +57,86 @@ public class Controller : MonoBehaviour
     }
 
     /// <summary>
-    /// Configures the inputs necessary to control the agent's movement and
-    /// assigns an event to the click input that calls the move agent method.
+    /// Configura los inputs necesarios para el movimiento del personaje.
     /// </summary>
     void AssingInputs()
     {
-        input.Main.Move.performed += ctx => ClicKToMove();
+        input.Main.Move.performed += ctx => ClickToMove();
+        input.Main.Jump.performed += ctx => Jump();
     }
 
     /// <summary>
-    /// A raycast is created from the mouse position to move the agent.
-    /// If a surface is detected in the selected part, the agent will move, 
-    /// towards that point, generating particles where it was clicked.
+    /// Se usa un Raycast para detectar la posici�n donde se hizo clic y mover al personaje.
     /// </summary>
-    void ClicKToMove()
+    void ClickToMove()
     {
         RaycastHit hit;
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, clickableLayer))
         {
-            agent.destination = hit.point;
-            if (clickEfect != null)
-            {
-                ParticleSystem Effect = Instantiate(clickEfect, hit.point += new Vector3(0, 0.1f, 0), clickEfect.transform.rotation);
-                Destroy(Effect.gameObject, Effect.main.duration);
-            }
+            targetPosition = hit.point;
+            isMoving = true;
+            Debug.Log("Destino actualizado a: " + targetPosition);
+        }
+        else
+        {
+            Debug.Log("No se detectó ningún objeto al hacer clic.");
+        }
+    }
+
+    void FixedUpdate()
+    {
+        isGrounded = Physics.Raycast(transform.position, Vector3.down, 1.1f, clickableLayer);
+
+        if (isMoving)
+        {
+            MoveToTarget();
+        }
+    }
+
+
+    /// <summary>
+    /// Mueve al personaje usando f�sica (MovePosition).
+    /// </summary>
+    void MoveToTarget()
+    {
+        Debug.Log("Moviendo a: " + targetPosition);
+        Vector3 direction = (targetPosition - transform.position).normalized;
+        Vector3 newPosition = Vector3.MoveTowards(rb.position, targetPosition, moveSpeed * Time.fixedDeltaTime);
+        rb.MovePosition(newPosition);
+
+        if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
+        {
+            isMoving = false;
+        }
+    }
+
+
+    /// <summary>
+    /// Aplica un impulso en el eje Y para simular un salto.
+    /// </summary>
+    void Jump()
+    {
+        if (isGrounded)
+        {
+            Debug.Log("Salto");
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        }
+        else
+        {
+            Debug.Log("No puede saltar, no está en el suelo.");
         }
     }
 
     /// <summary>
-    /// Rotates the agent in the direction of the destination. 
-    /// This is done by interpolation for smooth movement.
+    /// Rota al personaje en direcci�n al objetivo.
     /// </summary>
     void FaceTarget()
     {
-        // Calculates the direction to the destination
-        Vector3 direccion = (agent.destination - transform.position).normalized;
-
-        // Calculates the rotation that the object must have to face the direction of rotation
-        Quaternion lookRotation = Quaternion.LookRotation(direccion);
-
-        // Smoothly interpolates the current rotation to the new rotation
-        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * lookRotationSpeed);
+        Vector3 direction = (targetPosition - transform.position).normalized;
+        if (direction != Vector3.zero)
+        {
+            Quaternion lookRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * lookRotationSpeed);
+        }
     }
 }

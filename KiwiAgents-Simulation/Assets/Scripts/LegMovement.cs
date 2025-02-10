@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem.XR;
 using static UnityEngine.GraphicsBuffer;
 
 public class LegMovement : MonoBehaviour
@@ -40,9 +41,10 @@ public class LegMovement : MonoBehaviour
     {
         get
         {
-            return Controller.instance.agent.velocity.y;
+            return Controller.instance.rb.linearVelocity.y; // Usa Rigidbody en lugar de NavMeshAgent
         }
     }
+
 
     /// <summary>
     /// Initializes the resting position and sets the stepping point.
