@@ -132,6 +132,7 @@ GameObject:
   - component: {fileID: 41747916}
   - component: {fileID: 41747915}
   - component: {fileID: 41747914}
+  - component: {fileID: 41747919}
   m_Layer: 0
   m_Name: Kiwi Agent
   m_TagString: Untagged
@@ -149,7 +150,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.0282668
-  m_Speed: 3.5
+  m_Speed: 2
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -329,6 +330,20 @@ Transform:
   - {fileID: 1886645994}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &41747919
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 41747913}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ebd8b75c28fda74e9db80155e733604, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObjectFollow: {fileID: 3689416985821720532}
+  stopDistance: 1
 --- !u!1 &73828376
 GameObject:
   m_ObjectHideFlags: 0
@@ -10450,7 +10465,7 @@ GameObject:
   - component: {fileID: 5113153617475494801}
   m_Layer: 0
   m_Name: Kiwi LowPoly
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
