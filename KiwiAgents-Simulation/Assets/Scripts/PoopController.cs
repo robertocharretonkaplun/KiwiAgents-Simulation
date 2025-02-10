@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PoopController : MonoBehaviour
@@ -8,6 +10,11 @@ public class PoopController : MonoBehaviour
     public GameObject Poop;
     public GameObject PoopPosition;
     CustomAccion input;
+
+    [Header("Limitar Prefabs")]
+    public int maxPoops = 3;
+    private List<GameObject> activePoops = new List<GameObject>();
+
     private void Awake()
     {
         if (instance != null && instance != this)
@@ -44,8 +51,18 @@ public class PoopController : MonoBehaviour
 
     void ClicKToPoop()
     {
-        GameObject PoopTemporal = Instantiate(Poop, PoopPosition.transform.position, PoopPosition.transform.rotation) as GameObject;
-        Destroy(PoopTemporal, 5f);
+        if(activePoops.Count < maxPoops)
+        {
+            GameObject PoopTemporal = Instantiate(Poop, PoopPosition.transform.position, PoopPosition.transform.rotation);
+            activePoops.Add(PoopTemporal);
+            Destroy(PoopTemporal, 5f);
+            StartCoroutine(RemovePoopFromList(PoopTemporal, 5f));
+        }
+    }
+    private IEnumerator RemovePoopFromList(GameObject poop, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        activePoops.Remove(poop);
     }
 
     // Update is called once per frame
