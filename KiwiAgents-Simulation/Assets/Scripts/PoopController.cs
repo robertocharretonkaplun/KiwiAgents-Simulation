@@ -15,69 +15,59 @@ public class PoopController : MonoBehaviour
     public int maxPoops = 3;
     private List<GameObject> activePoops = new List<GameObject>();
 
-    private void Awake()
-    {
-        if (instance != null && instance != this)
-        {
+    public delegate void PoopEvent(bool hasPoop);
+    public static event PoopEvent OnPoopStatusChanged;
+
+    private 
+    void 
+    Awake() {
+        if (instance != null && instance != this) {
             return;
         }
-
         instance = this;
-
-        // Asignar una accion personalizada en nuestra input action
         input = new CustomAccion();
     }
 
-    private void Start()
-    {
-        // Asignar inputs de usuario
+    private 
+    void 
+    Start() {
         AssingInputs();
     }
 
-    /// <summary>
-    /// Configura los inputs necesarios para el Poop control del y
-    /// asigna un evento al input de clic derecho que llama al metodo que droppea popo.
-    /// </summary>
-
-    void AssingInputs()
-    {
+    void 
+    AssingInputs() {
         input.Main.Poop.performed += ctx => ClicKToPoop();
     }
 
-    /// <summary>
-    /// Crea un GameObject temporal que instancia el objeto popo en cuestion con la
-    /// posicion de un objeto vacio. Luego de 5 segundos, se destruye
-    /// </summary>
-
-    void ClicKToPoop()
-    {
-        if(activePoops.Count < maxPoops)
-        {
+    void 
+    ClicKToPoop() {
+        if (activePoops.Count < maxPoops) {
             GameObject PoopTemporal = Instantiate(Poop, PoopPosition.transform.position, PoopPosition.transform.rotation);
             activePoops.Add(PoopTemporal);
+            OnPoopStatusChanged?.Invoke(true); // Notificar a los enemigos que hay un Poop activo
             Destroy(PoopTemporal, 5f);
             StartCoroutine(RemovePoopFromList(PoopTemporal, 5f));
         }
     }
-    private IEnumerator RemovePoopFromList(GameObject poop, float delay)
-    {
+
+    private 
+    IEnumerator 
+    RemovePoopFromList(GameObject poop, 
+                       float delay) {
         yield return new WaitForSeconds(delay);
         activePoops.Remove(poop);
+        if (activePoops.Count == 0) {
+            OnPoopStatusChanged?.Invoke(false); // Notificar que ya no hay Poop activo
+        }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    void OnEnable()
-    {
+    void 
+    OnEnable() {
         input.Enable();
     }
 
-    void OnDisable()
-    {
+    void 
+    OnDisable() {
         input.Disable();
     }
 }
