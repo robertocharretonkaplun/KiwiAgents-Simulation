@@ -1196,6 +1196,8 @@ MonoBehaviour:
   stepLength: 0.003
   stepHeight: 0.001
   footOffset: {x: 0, y: 0, z: 0}
+  raycastDistance: 2
+  minFootSpacing: 0.5
 --- !u!4 &628967816
 Transform:
   m_ObjectHideFlags: 0
@@ -7312,6 +7314,8 @@ MonoBehaviour:
   stepLength: 0.003
   stepHeight: 0.001
   footOffset: {x: 0, y: 0, z: 0}
+  raycastDistance: 2
+  minFootSpacing: 0.5
 --- !u!1 &1188112262
 GameObject:
   m_ObjectHideFlags: 0

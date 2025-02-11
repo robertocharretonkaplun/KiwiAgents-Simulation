@@ -1,91 +1,117 @@
 using UnityEngine;
 
+/// <summary>
+/// Sistema de Inverse Kinematics (IK) para el movimiento de los pies en un personaje.
+/// Controla la posición de los pies al caminar en terrenos irregulares.
+/// </summary>
 public class IKSolver : MonoBehaviour
 {
-    [SerializeField] LayerMask terrainLayer = default; // Capa del terreno
-    [SerializeField] Transform body = default; // Referencia al hueso base del cuerpo
-    [SerializeField] IKSolver otherFoot = default; // Referencia al otro pie
-    [SerializeField] float speed = 1; // Velocidad del movimiento del pie
-    [SerializeField] float stepDistance = 4; // Distancia máxima antes de realizar un paso
-    [SerializeField] float stepLength = 4; // Longitud del paso de adelante a atrás
-    [SerializeField] float stepHeight = 1; // Altura máxima de cada paso
-    [SerializeField] Vector3 footOffset = default;
+    [SerializeField] private LayerMask terrainLayer; // Capa del terreno para detección de colisiones
+    [SerializeField] private Transform body; // Referencia al hueso base del cuerpo
+    [SerializeField] private IKSolver otherFoot; // Referencia al otro pie para sincronización
+    [SerializeField] private float speed = 5f; // Velocidad del movimiento del pie
+    [SerializeField] private float stepDistance = 3.5f; // Distancia máxima antes de realizar un paso
+    [SerializeField] private float stepLength = 3.5f; // Longitud del paso
+    [SerializeField] private float stepHeight = 1f; // Altura máxima de cada paso
+    [SerializeField] private Vector3 footOffset = Vector3.zero; // Ajuste de la posición del pie
+    [SerializeField] private float raycastDistance = 5f; // Distancia del raycast para detección del terreno
+    [SerializeField] private float minFootSpacing = 0.5f; // Distancia mínima entre los pies
 
-    float footSpacing; // Qué tan separados están ambos pies entre sí
-    float lerp; // Valor de interpolación
+    private float footSpacing; // Separación entre los pies
+    private float lerp; // Valor de interpolación para el movimiento del pie
 
-    Vector3 oldPosition, currentPosition, newPosition; // Posiciones del pie
-    Vector3 oldNormal, currentNormal, newNormal; // Valores para la rotación del pie
+    private Vector3 oldPosition, currentPosition, newPosition; // Posiciones del pie
+    private Vector3 oldNormal, currentNormal, newNormal; // Normales para la rotación del pie
 
     /// <summary>
-    /// Se inicializan las variables de posición y rotación del pie
+    /// Inicialización de variables y configuración inicial del pie.
     /// </summary>
     private void Start()
     {
         footSpacing = transform.localPosition.x;
         currentPosition = newPosition = oldPosition = transform.position;
         currentNormal = newNormal = oldNormal = transform.up;
-        lerp = 1; // Se le indica que el pie no está moviensose al inicio
+        lerp = 1f; // El pie está en reposo al inicio
     }
 
     /// <summary>
-    /// Controla el movimiento del pie y su ajuste al terreno en cada frame,
-    /// utilizando un raycast para encontrar el terreno al que el pie debe ir.
+    /// Actualiza la posición del pie en cada frame.
     /// </summary>
-    void Update()
+    private void Update()
     {
         transform.position = currentPosition;
         transform.up = currentNormal;
 
-        // Raycast desde el cuerpo hacia abajo para detectar la superficie del terreno
+        // Lanzar un raycast desde la posición del cuerpo hacia abajo para detectar el terreno
         Ray ray = new Ray(body.position + (body.right * footSpacing), Vector3.down);
-
-        if (Physics.Raycast(ray, out RaycastHit info, 10, terrainLayer.value))
+        if (Physics.Raycast(ray, out RaycastHit info, raycastDistance, terrainLayer.value))
         {
-            // Comprobar si el pie debe moverse
-            if (Vector3.Distance(newPosition, info.point) > stepDistance && !otherFoot.IsMoving() && lerp >= 1)
+            float footDistance = Vector3.Distance(currentPosition, info.point);
+
+            // Si el pie está demasiado lejos y el otro pie no se está moviendo, iniciar un paso
+            if (footDistance > stepDistance && !otherFoot.IsMoving() && lerp >= 1f)
             {
-                lerp = 0;
-                int direction = body.InverseTransformPoint(info.point).z > body.InverseTransformPoint(newPosition).z ? 1 : -1;
-                newPosition = info.point + (body.forward * stepLength * direction) + footOffset;
+                lerp = 0f;
+
+                // Calcular nueva posición del pie
+                Vector3 tentativeNewPosition = info.point + footOffset + (body.forward * (stepLength * 1.5f)) + (body.right * footSpacing);
+
+                // Verificar que los pies no estén demasiado separados
+                float forwardDistance = Mathf.Abs(tentativeNewPosition.z - otherFoot.currentPosition.z);
+                if (forwardDistance < minFootSpacing)
+                {
+                    float direction = Mathf.Sign(footSpacing);
+                    float adjustment = (minFootSpacing - forwardDistance) * 0.3f;
+                    adjustment = Mathf.Clamp(adjustment, 0, minFootSpacing * 0.5f);
+                    tentativeNewPosition += body.forward * direction * adjustment;
+                }
+
+                newPosition = tentativeNewPosition;
                 newNormal = info.normal;
+                Debug.Log($"Nuevo paso en: {newPosition}");
             }
         }
 
-        if (lerp < 1)
+        // Interpolación del movimiento del pie
+        if (lerp < 1f)
         {
             Vector3 tempPosition = Vector3.Lerp(oldPosition, newPosition, lerp);
             tempPosition.y += Mathf.Sin(lerp * Mathf.PI) * stepHeight;
-
             currentPosition = tempPosition;
             currentNormal = Vector3.Lerp(oldNormal, newNormal, lerp);
             lerp += Time.deltaTime * speed;
         }
         else
         {
-            oldPosition = newPosition;
-            oldNormal = newNormal;
+            oldPosition = currentPosition = newPosition;
+            oldNormal = currentNormal = newNormal;
         }
     }
 
     /// <summary>
-    /// Se dibuja una esfera roja en la posición objetivo del pie como si fuera un raycast.
+    /// Dibuja Gizmos en la escena para visualizar la posición del pie y el raycast.
     /// </summary>
     private void OnDrawGizmos()
     {
-
         Gizmos.color = Color.red;
+        Gizmos.DrawSphere(currentPosition, 0.2f);
+
+        Gizmos.color = Color.yellow;
         Gizmos.DrawSphere(newPosition, 0.2f);
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawLine(transform.position, newPosition);
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawRay(body.position + (body.right * footSpacing), Vector3.down * raycastDistance);
     }
 
     /// <summary>
-    /// Comprobar si el pie está actualmente en movimiento.
+    /// Verifica si el pie se está moviendo.
     /// </summary>
+    /// <returns>True si el pie está en movimiento, False si está en reposo.</returns>
     public bool IsMoving()
     {
-        return lerp < 1;
+        return lerp < 1f;
     }
-
-
-
 }
