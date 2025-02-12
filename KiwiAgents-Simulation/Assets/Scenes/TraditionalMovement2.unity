@@ -348,6 +348,7 @@ GameObject:
   - component: {fileID: 288063602}
   - component: {fileID: 288063601}
   - component: {fileID: 288063604}
+  - component: {fileID: 288063605}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -473,6 +474,21 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!114 &288063605
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 288063600}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b3ae05630ba09c4485cedb08036f80f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetName: Kiwi
+  cameraOffset: {x: 0.31, y: 8, z: -6}
+  followSpeed: 5
 --- !u!1 &483713525
 GameObject:
   m_ObjectHideFlags: 0
@@ -5719,7 +5735,6 @@ MonoBehaviour:
     m_Bits: 64
   kiwiRb: {fileID: 1044941505}
   kiwiAnimator: {fileID: 1044941503}
-  kiwiSpeed: 10
 --- !u!4 &1044941509 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: fab696e9a7268524a8bf8ae09e7f1aad, type: 3}
