@@ -59,7 +59,7 @@ public class Controller : MonoBehaviour
 
     /// <summary>
     /// Configura los inputs necesarios para el control del movimiento del agente y
-    /// asigna un evento al input de clic que llama al método mueve al agente.
+    /// asigna un evento al input de clic que llama al mï¿½todo mueve al agente.
     /// </summary>
     void AssingInputs()
     {
@@ -67,9 +67,9 @@ public class Controller : MonoBehaviour
     }
 
     /// <summary>
-    /// Se crea un raycast desde la posición del mpouse para mover el agente.
-    /// Si se detecta una superficie en la parte seleccionada, el agente se moverá 
-    /// hacia ese punto, generando unas partículas en donde se dio click.
+    /// Se crea un raycast desde la posiciï¿½n del mpouse para mover el agente.
+    /// Si se detecta una superficie en la parte seleccionada, el agente se moverï¿½ 
+    /// hacia ese punto, generando unas partï¿½culas en donde se dio click.
     /// </summary>
     void ClicKToMove()
     {
@@ -86,18 +86,112 @@ public class Controller : MonoBehaviour
     }
 
     /// <summary>
-    /// Rota al agente hacia la dirección del destino. 
-    /// Se hace mediante una interpolación para que el movimiento sea suave.
+    /// Rota al agente hacia la direcciï¿½n del destino. 
+    /// Se hace mediante una interpolaciï¿½n para que el movimiento sea suave.
     /// </summary>
     void FaceTarget()
     {
-        // Calcula la dirección hacia el destino
+        // Calcula la direcciï¿½n hacia el destino
         Vector3 direccion = (agent.destination - transform.position).normalized;
 
-        // Calcula la rotación que debe tener el objeto para mirar hacia la dirección
+        // Calcula la rotaciï¿½n que debe tener el objeto para mirar hacia la direcciï¿½n
         Quaternion lookRotation = Quaternion.LookRotation(direccion);
 
-        // Interpola suavemente la rotación actual hacia la nueva rotación
+        // Interpola suavemente la rotaciï¿½n actual hacia la nueva rotaciï¿½n
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * lookRotationSpeed);
     }
 }
+
+/*using Unity.VisualScripting;
+using UnityEngine;
+using UnityEngine.AI;
+
+public class Controller : MonoBehaviour
+{
+    public static Controller instance;
+
+    [Header("Agente")]
+    CustomAccion input;
+    public NavMeshAgent agent;
+
+    [Header("Movement")]
+    [SerializeField] ParticleSystem clickEfect;
+    [SerializeField] LayerMask clickableLayer;
+    [SerializeField] GameObject objectToInstantiate; // Objeto a instanciar
+    [SerializeField] Transform spawnPoint; // Punto de spawn del objeto
+
+    float lookRotationSpeed = 8f;
+
+    private void Awake()
+    {
+        if (instance != null && instance != this)
+        {
+            return;
+        }
+
+        instance = this;
+        input = new CustomAccion();
+    }
+
+    private void Start()
+    {
+        agent = GetComponent<NavMeshAgent>();
+        if (agent == null)
+        {
+            Debug.LogError("Agent was null, check for component.");
+        }
+
+        AssingInputs();
+    }
+
+    private void Update()
+    {
+        FaceTarget();
+    }
+
+    void OnEnable()
+    {
+        input.Enable();
+    }
+
+    void OnDisable()
+    {
+        input.Disable();
+    }
+
+    void AssingInputs()
+    {
+        input.Main.Move.performed += ctx => ClicKToMove();
+        input.Main.SecondaryAction.performed += ctx => InstantiateObject(); // Asigna acciÃ³n secundaria
+    }
+
+    void ClicKToMove()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, clickableLayer))
+        {
+            agent.destination = hit.point;
+            if (clickEfect != null)
+            {
+                ParticleSystem Effect = Instantiate(clickEfect, hit.point + new Vector3(0, 0.1f, 0), clickEfect.transform.rotation);
+                Destroy(Effect.gameObject, Effect.main.duration);
+            }
+        }
+    }
+
+    void InstantiateObject()
+    {
+        if (objectToInstantiate != null && spawnPoint != null)
+        {
+            Instantiate(objectToInstantiate, spawnPoint.position, spawnPoint.rotation);
+        }
+    }
+
+    void FaceTarget()
+    {
+        Vector3 direccion = (agent.destination - transform.position).normalized;
+        Quaternion lookRotation = Quaternion.LookRotation(direccion);
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * lookRotationSpeed);
+    }
+}
+*/

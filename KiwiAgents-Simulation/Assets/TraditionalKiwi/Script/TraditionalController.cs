@@ -119,3 +119,4 @@ public class TraditionalController : MonoBehaviour
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * lookRotationSpeed);
     }
 }
+
