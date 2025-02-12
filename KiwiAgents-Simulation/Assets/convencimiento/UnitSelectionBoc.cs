@@ -109,10 +109,15 @@ public class UnitSelectionBox : MonoBehaviour
     {
         foreach (var unit in UnitSelectionManager.Instance.allUnitsList)
         {
-            if (selectionBox.Contains(myCam.WorldToScreenPoint(unit.transform.position)))
+            // Verificar si la unidad está en el layer correcto antes de seleccionarla
+            if (unit.gameObject.layer == LayerMask.NameToLayer("Clickable"))
             {
-                UnitSelectionManager.Instance.DragSelect(unit);
+                if (selectionBox.Contains(myCam.WorldToScreenPoint(unit.transform.position)))
+                {
+                    UnitSelectionManager.Instance.DragSelect(unit);
+                }
             }
         }
     }
+
 }
