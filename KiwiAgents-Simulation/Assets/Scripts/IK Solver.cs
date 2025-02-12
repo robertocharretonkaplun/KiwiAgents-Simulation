@@ -2,67 +2,77 @@ using UnityEngine;
 
 /// <summary>
 /// Sistema de Inverse Kinematics (IK) para el movimiento de los pies en un personaje.
-/// Controla la posiciÛn de los pies al caminar en terrenos irregulares.
+/// Controla la posici√≥n de los pies al caminar en terrenos irregulares.
 /// </summary>
 public class IKSolver : MonoBehaviour
 {
-    [SerializeField] private LayerMask terrainLayer; // Capa del terreno para detecciÛn de colisiones
+    [SerializeField] private LayerMask terrainLayer; // Capa del terreno para detecci√≥n de colisiones
     [SerializeField] private Transform body; // Referencia al hueso base del cuerpo
-    [SerializeField] private IKSolver otherFoot; // Referencia al otro pie para sincronizaciÛn
+    [SerializeField] private IKSolver otherFoot; // Referencia al otro pie para sincronizaci√≥n
     [SerializeField] private float speed = 5f; // Velocidad del movimiento del pie
-    [SerializeField] private float stepDistance = 3.5f; // Distancia m·xima antes de realizar un paso
+    [SerializeField] private float stepDistance = 3.5f; // Distancia m√°xima antes de realizar un paso
     [SerializeField] private float stepLength = 3.5f; // Longitud del paso
-    [SerializeField] private float stepHeight = 1f; // Altura m·xima de cada paso
-    [SerializeField] private Vector3 footOffset = Vector3.zero; // Ajuste de la posiciÛn del pie
-    [SerializeField] private float raycastDistance = 5f; // Distancia del raycast para detecciÛn del terreno
-    [SerializeField] private float minFootSpacing = 0.5f; // Distancia mÌnima entre los pies
+    [SerializeField] private float stepHeight = 1f; // Altura m√°xima de cada paso
+    [SerializeField] private Vector3 footOffset = Vector3.zero; // Ajuste de la posici√≥n del pie
+    [SerializeField] private float raycastDistance = 5f; // Distancia del raycast para detecci√≥n del terreno
+    [SerializeField] private float minFootSpacing = 0.5f; // Distancia m√≠nima entre los pies
 
-    private float footSpacing; // SeparaciÛn entre los pies
-    private float lerp; // Valor de interpolaciÛn para el movimiento del pie
+    private float footSpacing; // Separaci√≥n entre los pies
+    private float lerp; // Valor de interpolaci√≥n para el movimiento del pie
 
     private Vector3 oldPosition, currentPosition, newPosition; // Posiciones del pie
-    private Vector3 oldNormal, currentNormal, newNormal; // Normales para la rotaciÛn del pie
+    private Vector3 oldNormal, currentNormal, newNormal; // Normales para la rotaci√≥n del pie
+    private Vector3 lastBodyPosition; // Calcular la direcci√≥n de movimiento
 
     /// <summary>
-    /// InicializaciÛn de variables y configuraciÛn inicial del pie.
+    /// Inicializaci√≥n de variables y configuraci√≥n inicial del pie.
     /// </summary>
     private void Start()
     {
         footSpacing = transform.localPosition.x;
         currentPosition = newPosition = oldPosition = transform.position;
         currentNormal = newNormal = oldNormal = transform.up;
-        lerp = 1f; // El pie est· en reposo al inicio
+        lerp = 1f; // El pie est√° en reposo al inicio
+
+        lastBodyPosition = body.position; // Guarda la posici√≥n inicial
     }
 
     /// <summary>
-    /// Actualiza la posiciÛn del pie en cada frame.
+    /// Actualiza la posici√≥n del pie en cada frame.
     /// </summary>
     private void Update()
     {
         transform.position = currentPosition;
         transform.up = currentNormal;
 
-        // Lanzar un raycast desde la posiciÛn del cuerpo hacia abajo para detectar el terreno
-        Ray ray = new Ray(body.position + (body.right * footSpacing), Vector3.down);
+        Vector3 bodyMovement = body.position - lastBodyPosition;
+        lastBodyPosition = body.position;
+
+            // Lanzar un raycast desde la posici√≥n del cuerpo hacia abajo para detectar el terreno
+            Ray ray = new Ray(body.position + (body.right * footSpacing), Vector3.down);
         if (Physics.Raycast(ray, out RaycastHit info, raycastDistance, terrainLayer.value))
         {
             float footDistance = Vector3.Distance(currentPosition, info.point);
 
-            // Si el pie est· demasiado lejos y el otro pie no se est· moviendo, iniciar un paso
-            if (footDistance > stepDistance && !otherFoot.IsMoving() && lerp >= 1f)
+            // Si el pie est√° demasiado lejos y el otro pie no se est√° moviendo, iniciar un paso
+            if ((footDistance > stepDistance || bodyMovement.magnitude > 0.01f) && 
+                !otherFoot.IsMoving() && lerp >= 1f)
             {
                 lerp = 0f;
 
-                // Calcular nueva posiciÛn del pie
-                Vector3 tentativeNewPosition = info.point + footOffset + (body.forward * (stepLength * 1.5f)) + (body.right * footSpacing);
+                float dynamicStepLength = stepLength + bodyMovement.magnitude * 1.5f;
 
-                // Verificar que los pies no estÈn demasiado separados
+                // Calcular nueva posici√≥n del pie
+                Vector3 tentativeNewPosition = info.point + footOffset + 
+                        (body.forward * dynamicStepLength) + (body.right * footSpacing);
+
+                // Verificar que los pies no est√©n demasiado separados
                 float forwardDistance = Mathf.Abs(tentativeNewPosition.z - otherFoot.currentPosition.z);
                 if (forwardDistance < minFootSpacing)
                 {
                     float direction = Mathf.Sign(footSpacing);
                     float adjustment = (minFootSpacing - forwardDistance) * 0.3f;
-                    adjustment = Mathf.Clamp(adjustment, 0, minFootSpacing * 0.5f);
+                    adjustment = Mathf.Clamp(adjustment, 0, minFootSpacing * 100.5f);
                     tentativeNewPosition += body.forward * direction * adjustment;
                 }
 
@@ -72,7 +82,7 @@ public class IKSolver : MonoBehaviour
             }
         }
 
-        // InterpolaciÛn del movimiento del pie
+        // Interpolaci√≥n del movimiento del pie
         if (lerp < 1f)
         {
             Vector3 tempPosition = Vector3.Lerp(oldPosition, newPosition, lerp);
@@ -89,7 +99,7 @@ public class IKSolver : MonoBehaviour
     }
 
     /// <summary>
-    /// Dibuja Gizmos en la escena para visualizar la posiciÛn del pie y el raycast.
+    /// Dibuja Gizmos en la escena para visualizar la posici√≥n del pie y el raycast.
     /// </summary>
     private void OnDrawGizmos()
     {
@@ -107,9 +117,9 @@ public class IKSolver : MonoBehaviour
     }
 
     /// <summary>
-    /// Verifica si el pie se est· moviendo.
+    /// Verifica si el pie se est√° moviendo.
     /// </summary>
-    /// <returns>True si el pie est· en movimiento, False si est· en reposo.</returns>
+    /// <returns>True si el pie est√° en movimiento, False si est√° en reposo.</returns>
     public bool IsMoving()
     {
         return lerp < 1f;
