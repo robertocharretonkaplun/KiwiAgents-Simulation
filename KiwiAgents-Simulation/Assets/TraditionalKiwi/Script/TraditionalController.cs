@@ -1,4 +1,4 @@
-using Unity.VisualScripting;
+/*using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -118,5 +118,116 @@ public class TraditionalController : MonoBehaviour
         // Interpola suavemente la rotaci�n actual hacia la nueva rotaci�n
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * lookRotationSpeed);
     }
+}*/
+using UnityEngine;
+using UnityEngine.AI;
+
+public class TraditionalController : MonoBehaviour
+{
+    public static TraditionalController instance;
+
+    [Header("Agente")]
+    CustomAccion input;
+    public NavMeshAgent agent;
+
+    [Header("Movement")]
+    [SerializeField] ParticleSystem clickEfect;
+    [SerializeField] LayerMask clickableLayer;
+
+    [Header("Animator By Bruwwu")] 
+    public Rigidbody kiwiRb;
+    public Animator kiwiAnimator;
+    float lookRotationSpeed = 8f;
+
+    private bool isMoving = false;
+
+    private void Awake()
+    {
+        if (instance != null && instance != this)
+        {
+            return;
+        }
+        instance = this;
+        input = new CustomAccion();
+        kiwiAnimator = GetComponent<Animator>();
+        kiwiRb = GetComponent<Rigidbody>();
+    }
+
+    private void Start()
+    {
+        agent = GetComponent<NavMeshAgent>();
+        if (agent == null)
+        {
+            Debug.LogError("Agent was null, check for component.");
+        }
+        AssingInputs();
+    }
+
+    private void Update()
+    {
+        FaceTarget();
+        CheckIdleState();
+    }
+
+    void OnEnable()
+    {
+        input.Enable();
+    }
+
+    void OnDisable()
+    {
+        input.Disable();
+    }
+
+    void AssingInputs()
+    {
+        input.Main.Move.performed += ctx => ClicKToMove();
+    }
+
+    void ClicKToMove()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, clickableLayer))
+        {
+            if (kiwiAnimator != null)
+            {
+                kiwiAnimator.SetTrigger("KiwiRun");
+            }
+            if(agent != null)
+            {
+                agent.destination = hit.point;
+            }
+            if (clickEfect != null)
+            {
+                ParticleSystem Effect = Instantiate(clickEfect, hit.point + new Vector3(0, 0.1f, 0), clickEfect.transform.rotation);
+                Destroy(Effect.gameObject, Effect.main.duration);
+            }
+        }
+    }
+
+    void FaceTarget()
+    {
+        if (agent.velocity.magnitude > 0.1f) // Solo rotar si se está moviendo
+        {
+            Vector3 direccion = (agent.destination - transform.position).normalized;
+            Quaternion lookRotation = Quaternion.LookRotation(direccion);
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * lookRotationSpeed);
+        }
+    }
+
+    void CheckIdleState()
+    {
+        if (agent.velocity.magnitude < 0.1f && isMoving)
+        {
+            Debug.Log("IDLE Animation");
+            isMoving = false;
+        }
+        else if (agent.velocity.magnitude >= 0.1f && !isMoving)
+        {
+            Debug.Log("Moving Animation");
+            isMoving = true;
+        }
+    }
 }
+
 
