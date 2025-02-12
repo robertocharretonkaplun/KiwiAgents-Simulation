@@ -189,10 +189,7 @@ public class TraditionalController : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, clickableLayer))
         {
-            if (kiwiAnimator != null)
-            {
-                kiwiAnimator.SetTrigger("KiwiRun");
-            }
+           
             if(agent != null)
             {
                 agent.destination = hit.point;
@@ -219,12 +216,22 @@ public class TraditionalController : MonoBehaviour
     {
         if (agent.velocity.magnitude < 0.1f && isMoving)
         {
-            Debug.Log("IDLE Animation");
+            if (kiwiAnimator != null)
+            {
+                Debug.Log("IDLE Animation");
+                kiwiAnimator.SetTrigger("KiwiIdle"); //Ya hay una pequeña animación improvisada del IDLE
+            }
+            
             isMoving = false;
         }
         else if (agent.velocity.magnitude >= 0.1f && !isMoving)
         {
-            Debug.Log("Moving Animation");
+            if(kiwiAnimator != null) //Bruwu/ He añadido los triggers en los states y se movió la verifiación del animator para cada state
+            {   
+                Debug.Log("Moving Animation");
+                kiwiAnimator.SetTrigger("KiwiRun");
+            }
+
             isMoving = true;
         }
     }
