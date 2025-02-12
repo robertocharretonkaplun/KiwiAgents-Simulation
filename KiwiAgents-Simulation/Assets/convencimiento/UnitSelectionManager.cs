@@ -8,7 +8,7 @@ public class UnitSelectionManager : MonoBehaviour
   public static UnitSelectionManager Instance { get; set; }
 
     public List <GameObject> allUnitsList = new List <GameObject> ();
-    public List<GameObject> unitSelected = new List<GameObject>();
+    public List<GameObject> unitsSelected = new List<GameObject>();
 
     public LayerMask clickable;
     public LayerMask ground;
@@ -47,18 +47,71 @@ public class UnitSelectionManager : MonoBehaviour
             //SI es hit del click es un objeto seleccionable
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, clickable))
             {
-                SelectByClicking(hit.collider.gameObject);
+
+                if (Input.GetKey(KeyCode.LeftShift))
+                {
+                    MultiSelect(hit.collider.gameObject);
+                }
+                else
+                {
+                    SelectByClicking(hit.collider.gameObject);
+                } 
             }
             else //Si no es objeto clickeable
             {
-                DeselectAll();
+                
+                if (!Input.GetKey(KeyCode.LeftShift) == false)
+                {
+                    DeselectAll();
+                }
+               
+            }
+        }
+
+        if (Input.GetMouseButtonDown(1) && unitsSelected.Count > 0)
+        {
+            RaycastHit hit;
+            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+
+
+            //SI es hit del click es un objeto seleccionable
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity, ground))
+            {
+                groundMarker.transform.position= hit.point;
+                groundMarker.SetActive(false);
+                groundMarker.SetActive(true);   
             }
         }
     }
+    private void MultiSelect(GameObject unit)
+    {
+       if (unitsSelected.Contains(unit) ==false)
+        {
+            unitsSelected.Add(unit);
+            TriggerSelectionIndicator(unit, true);
 
-
+            EnableUnitMovement(unit, true);
+        }
+        else
+        {
+            EnableUnitMovement(unit, false);
+            TriggerSelectionIndicator(unit, false);
+            unitsSelected.Remove(unit);
+        }
+    }
     private void DeselectAll()
     {
+
+        foreach (var unit in unitsSelected)
+        {
+            EnableUnitMovement(unit, false);
+            TriggerSelectionIndicator(unit, false);
+        }
+
+        groundMarker.SetActive(false);
+
+        unitsSelected.Clear();
+
 
     }
     private void   SelectByClicking(GameObject unit)
@@ -67,7 +120,9 @@ public class UnitSelectionManager : MonoBehaviour
 
 
 
-        unitSelected.Add(unit);
+        unitsSelected.Add(unit);
+
+        TriggerSelectionIndicator(unit, true);
         EnableUnitMovement(unit, true);
 
 
@@ -76,5 +131,11 @@ public class UnitSelectionManager : MonoBehaviour
     private void EnableUnitMovement(GameObject unit, bool shouldMove)
     {
         unit.GetComponent<KiwiMovement>().enabled = shouldMove;
+    }
+
+
+    private void TriggerSelectionIndicator(GameObject unit, bool isVisible)
+    {
+        unit.transform.GetChild(0).gameObject.SetActive(isVisible);
     }
 }
