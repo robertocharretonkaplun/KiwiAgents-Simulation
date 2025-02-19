@@ -4,11 +4,11 @@ using UnityEngine.InputSystem;
 public class CameraFollow : MonoBehaviour
 {
  [Header("Target Settings")]
-    public string targetName = "Kiwi"; // ?? Nombre del personaje a seguir
-    private Transform target; // ?? Transform del personaje
+    public string targetName = "Kiwi"; //  Nombre del personaje a seguir
+    private Transform target; // Transform del personaje
 
     [Header("Camera Settings")]
-    public Vector3 cameraOffset = new Vector3(0, 15, -10); // ?? Posición relativa al personaje
+    public Vector3 cameraOffset = new Vector3(0, 15, -10); // Posición relativa al personaje
     public float followSpeed = 10f; // ?? Velocidad de seguimiento
 
     private void Start()
@@ -19,7 +19,7 @@ public class CameraFollow : MonoBehaviour
         if (targetObject != null)
         {
             target = targetObject.transform;
-            transform.position = target.position + cameraOffset; // ?? Poner la cámara en su posición inicial
+            transform.position = target.position + cameraOffset; //  Poner la cámara en su posición inicial
         }
         else
         {
@@ -31,7 +31,7 @@ public class CameraFollow : MonoBehaviour
     {
         if (target == null) return;
 
-        // ?? SEGUIR AL PERSONAJE SIN TOCAR SU MOVIMIENTO
+        //  SEGUIR AL PERSONAJE SIN TOCAR SU MOVIMIENTO
         Vector3 desiredPosition = target.position + cameraOffset;
         transform.position = Vector3.Lerp(transform.position, desiredPosition, Time.deltaTime * followSpeed);
     }
