@@ -1,0 +1,74 @@
+{
+    "name": "CustomAccion",
+    "maps": [
+        {
+            "name": "Main",
+            "id": "98374ea2-7378-47f3-a8ff-c0cea3f78430",
+            "actions": [
+                {
+                    "name": "Move",
+                    "type": "Button",
+                    "id": "f3bec2c0-8782-4d9d-a9be-aae97bf3bead",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Jump",
+                    "type": "Button",
+                    "id": "2fd6d66c-b48f-4bc8-9064-72fd5b1b0566",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Poop",
+                    "type": "Button",
+                    "id": "a772d52c-094f-4237-a14f-c892e9353f9d",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "032c0beb-38ef-4ce2-b33e-e40d97019de2",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6f9cc086-a978-4ad0-b912-709a5edd93f2",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f4d00798-e7b1-40f4-a2ee-4db9306eea52",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Poop",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
