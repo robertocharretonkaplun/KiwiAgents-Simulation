@@ -919,6 +919,7 @@ GameObject:
   - component: {fileID: 2750345104506467516}
   - component: {fileID: 3025204909986905811}
   - component: {fileID: 2296708124102606541}
+  - component: {fileID: 4992620500013314938}
   - component: {fileID: 2707294736490079167}
   - component: {fileID: 7864508442260379261}
   m_Layer: 0
@@ -938,7 +939,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0.59, z: 0}
-  m_LocalScale: {x: 20.320004, y: 20.320004, z: 20.320004}
+  m_LocalScale: {x: 60.96001, y: 60.96001, z: 60.96001}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7018634164851445433}
@@ -946,6 +947,7 @@ Transform:
   - {fileID: 8055103499747429287}
   - {fileID: 6778913480306675018}
   - {fileID: 2983849785747909917}
+  - {fileID: 7986980543921578367}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!137 &1561038107711981525
@@ -1118,6 +1120,21 @@ MonoBehaviour:
     m_Bits: 64
   jumpForce: 5
   moveSpeed: 2
+--- !u!114 &4992620500013314938
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3593727058820848743}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27ecc397ef25a4443aaed3fc2cee500a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Poop: {fileID: 2447766078723701400, guid: 183e65d9be9dcfc4f980677dea18ad8e, type: 3}
+  PoopPosition: {fileID: 5353285814625146842}
+  maxPoops: 3
 --- !u!95 &2707294736490079167
 Animator:
   serializedVersion: 7
@@ -1509,6 +1526,37 @@ Transform:
   - {fileID: 658756169817252636}
   - {fileID: 6600250302896606874}
   m_Father: {fileID: 1735130746974041584}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5353285814625146842
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7986980543921578367}
+  m_Layer: 0
+  m_Name: PoopTarget
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7986980543921578367
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5353285814625146842}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -1, z: -0, w: 0}
+  m_LocalPosition: {x: -0, y: 0.021175383, z: -0.039302137}
+  m_LocalScale: {x: 0.016404197, y: 0.016404197, z: 0.016404197}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 227669728265591052}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5425576418102698557
 GameObject:
