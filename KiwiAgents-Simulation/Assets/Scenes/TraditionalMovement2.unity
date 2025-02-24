@@ -5754,6 +5754,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objectToInstantiate: {fileID: 6473715128843212120, guid: 1349e450006a2404682c5f1ccd206e8c, type: 3}
   spawnPoint: {fileID: 1672650247}
+  SpawnOffset: {x: 0, y: 0, z: -0.22}
 --- !u!1 &1066916125
 GameObject:
   m_ObjectHideFlags: 0
