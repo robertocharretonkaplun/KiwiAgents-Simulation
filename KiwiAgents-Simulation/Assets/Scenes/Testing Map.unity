@@ -3622,17 +3622,33 @@ PrefabInstance:
       propertyPath: jumpForce
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 2296708124102606541, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: moveSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2398625386810122563, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: stepLength
+      value: 0.005
+      objectReference: {fileID: 0}
+    - target: {fileID: 2398625386810122563, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: stepDistance
+      value: 0.01
+      objectReference: {fileID: 0}
     - target: {fileID: 3593727058820848743, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
       propertyPath: m_Name
       value: Kiwi LowPoly New
       objectReference: {fileID: 0}
-    - target: {fileID: 5097663394983020915, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
-      propertyPath: m_LocalScale.y
+    - target: {fileID: 3593727058820848743, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 5097663394983020915, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1
+    - target: {fileID: 5009025253250801416, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: stepLength
+      value: 0.005
+      objectReference: {fileID: 0}
+    - target: {fileID: 5009025253250801416, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: stepDistance
+      value: 0.01
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
