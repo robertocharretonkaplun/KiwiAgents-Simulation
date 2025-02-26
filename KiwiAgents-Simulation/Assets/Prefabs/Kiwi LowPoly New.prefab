@@ -242,7 +242,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0.000000058140294, y: -0.000000094459736, z: -0.14724039, w: 0.98910075}
   m_LocalPosition: {x: -0.0025253554, y: 0.0000000028312206, z: -2.6926117e-10}
-  m_LocalScale: {x: 1, y: 1.0000004, z: 1.0000001}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7677378918916536640}
@@ -920,6 +920,7 @@ GameObject:
   - component: {fileID: 3025204909986905811}
   - component: {fileID: 2296708124102606541}
   - component: {fileID: 4992620500013314938}
+  - component: {fileID: 9122530828213374217}
   - component: {fileID: 2707294736490079167}
   - component: {fileID: 7864508442260379261}
   m_Layer: 0
@@ -1118,8 +1119,9 @@ MonoBehaviour:
   clickableLayer:
     serializedVersion: 2
     m_Bits: 64
-  jumpForce: 5
-  moveSpeed: 2
+  jumpForce: 8
+  moveSpeed: 5
+  airControlFactor: 0.5
 --- !u!114 &4992620500013314938
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1135,6 +1137,22 @@ MonoBehaviour:
   Poop: {fileID: 2447766078723701400, guid: 183e65d9be9dcfc4f980677dea18ad8e, type: 3}
   PoopPosition: {fileID: 5353285814625146842}
   maxPoops: 3
+--- !u!114 &9122530828213374217
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3593727058820848743}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a76b4e76798e8a4b8b0e924a75d0541, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  neckBone: {fileID: 8644609817661277631}
+  jawBone: {fileID: 6923790701461591546}
+  rotationSpeed: 15
+  rotationAngle: 30
 --- !u!95 &2707294736490079167
 Animator:
   serializedVersion: 7
