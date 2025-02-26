@@ -6097,7 +6097,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: ecbdad28ca0ee524cb2eba68bc2244fd, type: 2}
     - target: {fileID: 3593727058820848743, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
       propertyPath: m_Name
-      value: Kiwi LowPoly New
+      value: Kiwi_Cel
       objectReference: {fileID: 0}
     - target: {fileID: 4247802187221726808, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
       propertyPath: m_Enabled
@@ -7683,6 +7683,126 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2260838521744650801, guid: c1ca82afce0fdf042a3bf8588fce1e88, type: 3}
   m_PrefabInstance: {fileID: 1213539137}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1216884143
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1451642368}
+    m_Modifications:
+    - target: {fileID: 227669728265591052, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 227669728265591052, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 227669728265591052, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 227669728265591052, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -5.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 227669728265591052, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.6013718
+      objectReference: {fileID: 0}
+    - target: {fileID: 227669728265591052, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -5.89
+      objectReference: {fileID: 0}
+    - target: {fileID: 227669728265591052, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -0.7282595
+      objectReference: {fileID: 0}
+    - target: {fileID: 227669728265591052, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 227669728265591052, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.6853015
+      objectReference: {fileID: 0}
+    - target: {fileID: 227669728265591052, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 227669728265591052, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 227669728265591052, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 273.48102
+      objectReference: {fileID: 0}
+    - target: {fileID: 227669728265591052, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1236988247191427546, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1525066076399508933, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1561038107711981525, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1561038107711981525, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1561038107711981525, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: b6515e574acce6744bc6ae023d63ac96, type: 2}
+    - target: {fileID: 1561038107711981525, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: -8721040706178270448, guid: 6517aeed1f34fd449aeb5a8b6838e64a, type: 3}
+    - target: {fileID: 1561038107711981525, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: 'm_Materials.Array.data[2]'
+      value: 
+      objectReference: {fileID: -4077520114219710693, guid: 6517aeed1f34fd449aeb5a8b6838e64a, type: 3}
+    - target: {fileID: 1561038107711981525, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: 'm_Materials.Array.data[3]'
+      value: 
+      objectReference: {fileID: 2100000, guid: b6515e574acce6744bc6ae023d63ac96, type: 2}
+    - target: {fileID: 3593727058820848743, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: m_Name
+      value: Kiwi_Retro
+      objectReference: {fileID: 0}
+    - target: {fileID: 6384646803161804883, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7820039276939910821, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7864508442260379261, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 2296708124102606541, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+    - {fileID: 4992620500013314938, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+--- !u!4 &1216884144 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 227669728265591052, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+  m_PrefabInstance: {fileID: 1216884143}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1217173326
 GameObject:
   m_ObjectHideFlags: 0
@@ -9138,7 +9258,7 @@ Transform:
   m_GameObject: {fileID: 1451642367}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -34.40448, y: 18.459473, z: 174.4784}
+  m_LocalPosition: {x: -34.40448, y: 18.459473, z: 176.49}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -9147,8 +9267,9 @@ Transform:
   - {fileID: 1150312426}
   - {fileID: 1821201108}
   - {fileID: 849847814}
-  - {fileID: 516576259}
   - {fileID: 1554520808}
+  - {fileID: 516576259}
+  - {fileID: 1216884144}
   m_Father: {fileID: 1737731938}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1469197483
@@ -9677,7 +9798,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3593727058820848743, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
       propertyPath: m_Name
-      value: Kiwi LowPoly New
+      value: Kiwi Normal
+      objectReference: {fileID: 0}
+    - target: {fileID: 7820039276939910821, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 2296708124102606541, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
