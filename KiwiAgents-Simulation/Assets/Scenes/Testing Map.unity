@@ -3826,6 +3826,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: MainCharacter
       objectReference: {fileID: 0}
+    - target: {fileID: 9122530828213374217, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: jawBone
+      value: 
+      objectReference: {fileID: 1404394449}
+    - target: {fileID: 9122530828213374217, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: playerRigidbody
+      value: 
+      objectReference: {fileID: 669683505}
+    - target: {fileID: 9122530828213374217, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: playerTransform
+      value: 
+      objectReference: {fileID: 669683498}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3834,6 +3846,11 @@ PrefabInstance:
 --- !u!4 &669683498 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 227669728265591052, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+  m_PrefabInstance: {fileID: 669683497}
+  m_PrefabAsset: {fileID: 0}
+--- !u!54 &669683505 stripped
+Rigidbody:
+  m_CorrespondingSourceObject: {fileID: 2750345104506467516, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
   m_PrefabInstance: {fileID: 669683497}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &703803678
@@ -9154,6 +9171,11 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1388036551}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &1404394449 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1735130746974041584, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+  m_PrefabInstance: {fileID: 669683497}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1410659356
 GameObject:
   m_ObjectHideFlags: 0
