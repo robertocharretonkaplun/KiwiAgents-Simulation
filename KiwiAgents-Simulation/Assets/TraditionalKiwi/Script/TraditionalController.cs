@@ -139,8 +139,6 @@ public class TraditionalController : MonoBehaviour
     public Animator kiwiAnimator;
     float lookRotationSpeed = 8f;
 
-    private bool isMoving = false;
-
     private void Awake()
     {
         if (instance != null && instance != this)
@@ -166,7 +164,7 @@ public class TraditionalController : MonoBehaviour
     private void Update()
     {
         FaceTarget();
-        CheckIdleState();
+        UpdateBlendTree();
     }
 
     void OnEnable()
@@ -189,7 +187,6 @@ public class TraditionalController : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, clickableLayer))
         {
-           
             if(agent != null)
             {
                 agent.destination = hit.point;
@@ -212,27 +209,13 @@ public class TraditionalController : MonoBehaviour
         }
     }
 
-    void CheckIdleState()
+    // Actualiza el parámetro "Velocity" para el blend tree del Animator
+    void UpdateBlendTree()
     {
-        if (agent.velocity.magnitude < 0.1f && isMoving)
+        if (kiwiAnimator != null)
         {
-            if (kiwiAnimator != null)
-            {
-                Debug.Log("IDLE Animation");
-                kiwiAnimator.SetTrigger("KiwiIdle"); //Ya hay una pequeña animación improvisada del IDLE
-            }
-            
-            isMoving = false;
-        }
-        else if (agent.velocity.magnitude >= 0.1f && !isMoving)
-        {
-            if(kiwiAnimator != null) //Bruwu/ He añadido los triggers en los states y se movió la verifiación del animator para cada state
-            {   
-                Debug.Log("Moving Animation");
-                kiwiAnimator.SetTrigger("KiwiRun");
-            }
-
-            isMoving = true;
+            // Ajusta según convenga. Aquí se usa la magnitud de la velocidad del NavMeshAgent.
+            kiwiAnimator.SetFloat("Velocity", agent.velocity.magnitude);
         }
     }
 }
