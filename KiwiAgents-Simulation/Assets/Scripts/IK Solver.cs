@@ -42,6 +42,12 @@ public class IKSolver : MonoBehaviour
     /// </summary>
     private void Update()
     {
+        // No hacer nada si el personaje está quieto
+        if (Controller.instance != null && !Controller.instance.isMoving)
+        {
+            return;
+        }
+
         transform.position = currentPosition;
         transform.up = currentNormal;
 

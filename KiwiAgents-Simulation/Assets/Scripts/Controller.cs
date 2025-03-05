@@ -18,7 +18,7 @@ public class Controller : MonoBehaviour
 
     private Vector3 targetPosition;
     private Vector3 moveDirection; // Nueva variable para almacenar dirección de movimiento
-    private bool isMoving = false;
+    public bool isMoving = false;
     private bool isGrounded;
 
     private void Awake()
