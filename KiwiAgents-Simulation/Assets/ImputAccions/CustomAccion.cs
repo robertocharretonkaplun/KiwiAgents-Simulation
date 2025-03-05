@@ -35,6 +35,24 @@ public partial class @CustomAccion: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Jump"",
+                    ""type"": ""Button"",
+                    ""id"": ""2fd6d66c-b48f-4bc8-9064-72fd5b1b0566"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Poop"",
+                    ""type"": ""Button"",
+                    ""id"": ""a772d52c-094f-4237-a14f-c892e9353f9d"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -48,6 +66,28 @@ public partial class @CustomAccion: IInputActionCollection2, IDisposable
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6f9cc086-a978-4ad0-b912-709a5edd93f2"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f4d00798-e7b1-40f4-a2ee-4db9306eea52"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Poop"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -57,6 +97,8 @@ public partial class @CustomAccion: IInputActionCollection2, IDisposable
         // Main
         m_Main = asset.FindActionMap("Main", throwIfNotFound: true);
         m_Main_Move = m_Main.FindAction("Move", throwIfNotFound: true);
+        m_Main_Jump = m_Main.FindAction("Jump", throwIfNotFound: true);
+        m_Main_Poop = m_Main.FindAction("Poop", throwIfNotFound: true);
     }
 
     ~@CustomAccion()
@@ -124,11 +166,15 @@ public partial class @CustomAccion: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Main;
     private List<IMainActions> m_MainActionsCallbackInterfaces = new List<IMainActions>();
     private readonly InputAction m_Main_Move;
+    private readonly InputAction m_Main_Jump;
+    private readonly InputAction m_Main_Poop;
     public struct MainActions
     {
         private @CustomAccion m_Wrapper;
         public MainActions(@CustomAccion wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Main_Move;
+        public InputAction @Jump => m_Wrapper.m_Main_Jump;
+        public InputAction @Poop => m_Wrapper.m_Main_Poop;
         public InputActionMap Get() { return m_Wrapper.m_Main; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -141,6 +187,12 @@ public partial class @CustomAccion: IInputActionCollection2, IDisposable
             @Move.started += instance.OnMove;
             @Move.performed += instance.OnMove;
             @Move.canceled += instance.OnMove;
+            @Jump.started += instance.OnJump;
+            @Jump.performed += instance.OnJump;
+            @Jump.canceled += instance.OnJump;
+            @Poop.started += instance.OnPoop;
+            @Poop.performed += instance.OnPoop;
+            @Poop.canceled += instance.OnPoop;
         }
 
         private void UnregisterCallbacks(IMainActions instance)
@@ -148,6 +200,12 @@ public partial class @CustomAccion: IInputActionCollection2, IDisposable
             @Move.started -= instance.OnMove;
             @Move.performed -= instance.OnMove;
             @Move.canceled -= instance.OnMove;
+            @Jump.started -= instance.OnJump;
+            @Jump.performed -= instance.OnJump;
+            @Jump.canceled -= instance.OnJump;
+            @Poop.started -= instance.OnPoop;
+            @Poop.performed -= instance.OnPoop;
+            @Poop.canceled -= instance.OnPoop;
         }
 
         public void RemoveCallbacks(IMainActions instance)
@@ -168,5 +226,7 @@ public partial class @CustomAccion: IInputActionCollection2, IDisposable
     public interface IMainActions
     {
         void OnMove(InputAction.CallbackContext context);
+        void OnJump(InputAction.CallbackContext context);
+        void OnPoop(InputAction.CallbackContext context);
     }
 }

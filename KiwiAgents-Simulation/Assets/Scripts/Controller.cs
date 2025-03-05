@@ -1,6 +1,4 @@
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class Controller : MonoBehaviour
 {
@@ -8,43 +6,48 @@ public class Controller : MonoBehaviour
 
     [Header("Agente")]
     CustomAccion input;
-    public NavMeshAgent agent;
+    public Rigidbody rb;
 
     [Header("Movement")]
-    [SerializeField] ParticleSystem clickEfect;
+    [SerializeField] ParticleSystem clickEffect;
     [SerializeField] LayerMask clickableLayer;
-
+    public float jumpForce = 5f;
+    public float moveSpeed = 5f;
+    public float airControlFactor = 0.5f; // Control en el aire
     float lookRotationSpeed = 8f;
+
+    private Vector3 targetPosition;
+    private Vector3 moveDirection; // Nueva variable para almacenar dirección de movimiento
+    public bool isMoving = false;
+    private bool isGrounded;
 
     private void Awake()
     {
         if (instance != null && instance != this)
         {
+            Destroy(gameObject);
             return;
         }
 
         instance = this;
-
-        // Asignar una accion personalizada en nuestra input action
         input = new CustomAccion();
     }
 
-    private void Start()
+    void Start()
     {
-        // Asignar la referencia del NavMeshAgent y comprobar que no sea nulo
-        agent = GetComponent<NavMeshAgent>();
-        if (agent == null)
-        {
-            Debug.LogError("Agent was null, check for component.");
-        }
-
-        // Asignar inputs de usuario
+        rb = GetComponent<Rigidbody>();
+        rb.freezeRotation = true; // Bloquea la rotación del Rigidbody
         AssingInputs();
+        targetPosition = transform.position;
     }
 
     private void Update()
     {
-        FaceTarget();
+        // Asegura que el personaje siempre mire hacia donde se mueve
+        if (isMoving)
+        {
+            FaceTarget();
+        }
     }
 
     void OnEnable()
@@ -58,140 +61,87 @@ public class Controller : MonoBehaviour
     }
 
     /// <summary>
-    /// Configura los inputs necesarios para el control del movimiento del agente y
-    /// asigna un evento al input de clic que llama al m�todo mueve al agente.
+    /// Configura los inputs necesarios para el movimiento del personaje.
     /// </summary>
     void AssingInputs()
     {
-        input.Main.Move.performed += ctx => ClicKToMove();
+        input.Main.Move.performed += ctx => ClickToMove();
+        input.Main.Jump.performed += ctx => Jump();
     }
 
     /// <summary>
-    /// Se crea un raycast desde la posici�n del mpouse para mover el agente.
-    /// Si se detecta una superficie en la parte seleccionada, el agente se mover� 
-    /// hacia ese punto, generando unas part�culas en donde se dio click.
+    /// Se usa un Raycast para detectar la posición donde se hizo clic y mover al personaje.
     /// </summary>
-    void ClicKToMove()
+    void ClickToMove()
     {
         RaycastHit hit;
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, clickableLayer))
         {
-            agent.destination = hit.point;
-            if (clickEfect != null)
-            {
-                ParticleSystem Effect = Instantiate(clickEfect, hit.point += new Vector3(0, 0.1f, 0), clickEfect.transform.rotation);
-                Destroy(Effect.gameObject, Effect.main.duration);
-            }
+            targetPosition = hit.point;
+            moveDirection = (targetPosition - transform.position).normalized; // Guarda la dirección
+            isMoving = true;
+        }
+    }
+
+    void FixedUpdate()
+    {
+        isGrounded = Physics.Raycast(transform.position, Vector3.down, 1.1f, clickableLayer);
+
+        if (isGrounded)
+        {
+            transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
+        }
+
+        if (isMoving)
+        {
+            MoveCharacter();
         }
     }
 
     /// <summary>
-    /// Rota al agente hacia la direcci�n del destino. 
-    /// Se hace mediante una interpolaci�n para que el movimiento sea suave.
+    /// Mueve al personaje en el suelo o en el aire.
+    /// </summary>
+    void MoveCharacter()
+    {
+        if (isGrounded)
+        {
+            // Movimiento normal en el suelo
+            Vector3 newPosition = Vector3.MoveTowards(rb.position, targetPosition, moveSpeed * Time.fixedDeltaTime);
+            rb.MovePosition(newPosition);
+        }
+        else
+        {
+            // Movimiento en el aire con menor control
+            rb.linearVelocity = new Vector3(moveDirection.x * moveSpeed * airControlFactor, rb.linearVelocity.y, moveDirection.z * moveSpeed * airControlFactor);
+        }
+
+        // Si ya llegó al objetivo, detiene el movimiento
+        if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
+        {
+            isMoving = false;
+        }
+    }
+
+    /// <summary>
+    /// Aplica un impulso en el eje Y para simular un salto.
+    /// </summary>
+    void Jump()
+    {
+        if (isGrounded)
+        {
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        }
+    }
+
+    /// <summary>
+    /// Rota al personaje en dirección al objetivo.
     /// </summary>
     void FaceTarget()
     {
-        // Calcula la direcci�n hacia el destino
-        Vector3 direccion = (agent.destination - transform.position).normalized;
-
-        // Calcula la rotaci�n que debe tener el objeto para mirar hacia la direcci�n
-        Quaternion lookRotation = Quaternion.LookRotation(direccion);
-
-        // Interpola suavemente la rotaci�n actual hacia la nueva rotaci�n
-        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * lookRotationSpeed);
+        if (moveDirection != Vector3.zero)
+        {
+            Quaternion lookRotation = Quaternion.LookRotation(moveDirection);
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * lookRotationSpeed);
+        }
     }
 }
-
-/*using Unity.VisualScripting;
-using UnityEngine;
-using UnityEngine.AI;
-
-public class Controller : MonoBehaviour
-{
-    public static Controller instance;
-
-    [Header("Agente")]
-    CustomAccion input;
-    public NavMeshAgent agent;
-
-    [Header("Movement")]
-    [SerializeField] ParticleSystem clickEfect;
-    [SerializeField] LayerMask clickableLayer;
-    [SerializeField] GameObject objectToInstantiate; // Objeto a instanciar
-    [SerializeField] Transform spawnPoint; // Punto de spawn del objeto
-
-    float lookRotationSpeed = 8f;
-
-    private void Awake()
-    {
-        if (instance != null && instance != this)
-        {
-            return;
-        }
-
-        instance = this;
-        input = new CustomAccion();
-    }
-
-    private void Start()
-    {
-        agent = GetComponent<NavMeshAgent>();
-        if (agent == null)
-        {
-            Debug.LogError("Agent was null, check for component.");
-        }
-
-        AssingInputs();
-    }
-
-    private void Update()
-    {
-        FaceTarget();
-    }
-
-    void OnEnable()
-    {
-        input.Enable();
-    }
-
-    void OnDisable()
-    {
-        input.Disable();
-    }
-
-    void AssingInputs()
-    {
-        input.Main.Move.performed += ctx => ClicKToMove();
-        input.Main.SecondaryAction.performed += ctx => InstantiateObject(); // Asigna acción secundaria
-    }
-
-    void ClicKToMove()
-    {
-        RaycastHit hit;
-        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, clickableLayer))
-        {
-            agent.destination = hit.point;
-            if (clickEfect != null)
-            {
-                ParticleSystem Effect = Instantiate(clickEfect, hit.point + new Vector3(0, 0.1f, 0), clickEfect.transform.rotation);
-                Destroy(Effect.gameObject, Effect.main.duration);
-            }
-        }
-    }
-
-    void InstantiateObject()
-    {
-        if (objectToInstantiate != null && spawnPoint != null)
-        {
-            Instantiate(objectToInstantiate, spawnPoint.position, spawnPoint.rotation);
-        }
-    }
-
-    void FaceTarget()
-    {
-        Vector3 direccion = (agent.destination - transform.position).normalized;
-        Quaternion lookRotation = Quaternion.LookRotation(direccion);
-        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * lookRotationSpeed);
-    }
-}
-*/
