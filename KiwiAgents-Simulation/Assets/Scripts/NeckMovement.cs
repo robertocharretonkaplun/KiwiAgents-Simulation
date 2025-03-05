@@ -1,55 +1,72 @@
 using UnityEngine;
-using UnityEngine.InputSystem.XR;
-using static UnityEngine.GraphicsBuffer;
 
 public class NeckMovement : MonoBehaviour
 {
-    // Reference to the neck bone and jaw bone transforms
-    public Transform neckBone; 
+    public Transform neckBone;
     public Transform jawBone;
+    public Transform playerTransform; // Ahora detectamos movimiento con Transform
+    private Vector3 lastPosition; // Última posición para detectar movimiento
 
+    // Parámetros de Idle
+    public float idleRotationSpeed = 15f;
+    public float idleRotationAngle = 30f;
 
-    // Speed at which the neck rotates and the maximum angle it can rotate
-    public float rotationSpeed = 15f;   
-    public float rotationAngle = 30f;
+    // Parámetros de Caminata
+    public float walkBounceSpeed = 5f;
+    public float walkBounceHeight = 2f;
+    public float walkTiltSpeed = 3f;
+    public float walkTiltAngle = 5f;
+    public float movementThreshold = 0.01f; // Más sensible al movimiento
 
-    // Current angle of rotation and movement direction
-    private float currentAngle = 0f;
+    private float idleAngle = 0f;
     private bool movingRight = true;
+    private bool isMoving = false;
+    private float walkOffset = 0f;
 
-    // LateUpdate is used to ensure the rotation is applied after all other updates
     void LateUpdate()
     {
-        // If the neck or jaw bones are not assigned, exit the function
-        if (neckBone == null || jawBone == null) return;
+        if (neckBone == null || jawBone == null || playerTransform == null) return;
 
-        // Update the neck and jaw rotations
-        UpdateNeckRotation();
-        UpdateJawRotation();
+        // ✅ Nueva detección de movimiento con Transform
+        isMoving = (playerTransform.position - lastPosition).sqrMagnitude > movementThreshold;
+        lastPosition = playerTransform.position; // Guardar última posición
+
+        // 🔍 Debug para verificar si ahora detecta el movimiento correctamente
+        Debug.Log("Kiwi en movimiento: " + isMoving);
+
+        // Aplicar la animación según el estado
+        if (isMoving)
+            UpdateNeckWalking();
+        else
+            UpdateNeckIdle();
+
+        // Sincronizar mandíbula con el cuello
+        jawBone.localRotation = neckBone.localRotation;
     }
 
     /// <summary>
-    /// Handles the oscillation of the neck, moving right and left within the specified range.
+    /// Movimiento del cuello en Idle (solo balanceo lateral)
     /// </summary>
-    void UpdateNeckRotation()
+    void UpdateNeckIdle()
     {
-        // Oscillate the neck's rotation from right to left
-        currentAngle = movingRight ? currentAngle + rotationSpeed * Time.deltaTime : currentAngle - rotationSpeed * Time.deltaTime;
+        idleAngle = movingRight ? idleAngle + idleRotationSpeed * Time.deltaTime : idleAngle - idleRotationSpeed * Time.deltaTime;
 
-        // Invert the direction when the maximum angle is reached
-        if (currentAngle > rotationAngle) movingRight = false;
-        else if (currentAngle < -rotationAngle) movingRight = true;
+        if (idleAngle > idleRotationAngle) movingRight = false;
+        else if (idleAngle < -idleRotationAngle) movingRight = true;
 
-        // Apply the rotation to the neck on the Y-axis
-        neckBone.localRotation = Quaternion.Euler(0, currentAngle, 0);
+        neckBone.localRotation = Quaternion.Euler(0, idleAngle, 0);
     }
 
     /// <summary>
-    /// Updates the jaw rotation to follow the neck's movement.
+    /// Movimiento del cuello en Caminata (sube y baja + leve inclinación lateral)
     /// </summary>
-    void UpdateJawRotation()
+    void UpdateNeckWalking()
     {
-        // The jaw follows the neck's movement with the same rotation
-        jawBone.localRotation = Quaternion.Euler(0, currentAngle, 0);
+        walkOffset += Time.deltaTime * walkBounceSpeed;
+
+        float verticalMovement = Mathf.Sin(walkOffset) * walkBounceHeight;
+        float sideTilt = Mathf.Cos(walkOffset * walkTiltSpeed) * walkTiltAngle;
+
+        neckBone.localRotation = Quaternion.Euler(verticalMovement, sideTilt, 0);
     }
 }
