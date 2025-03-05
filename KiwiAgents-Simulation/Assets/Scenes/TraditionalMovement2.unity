@@ -5671,7 +5671,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!195 &1044941506
 NavMeshAgent:
@@ -5723,7 +5723,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1044941502}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e0bddc535f0982046ab048e6fbd4e271, type: 3}
   m_Name: 
@@ -5762,7 +5762,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1044941502}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7f376ff34d4bdbb4db166906d09bc0d3, type: 3}
   m_Name: 
@@ -5773,7 +5773,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   kiwiRb: {fileID: 1044941505}
-  kiwiAnimator: {fileID: 0}
+  kiwiAnimator: {fileID: 1044941503}
   jumpForce: 5
 --- !u!1 &1066916125
 GameObject:
