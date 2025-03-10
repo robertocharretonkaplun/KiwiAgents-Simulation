@@ -8,11 +8,11 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - NavMesh
+  - Player
   - Water
   - UI
+  - UI
   - Ground
-  - 
   - 
   - 
   - 
