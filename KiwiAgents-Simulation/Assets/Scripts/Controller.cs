@@ -16,10 +16,18 @@ public class Controller : MonoBehaviour
     public float airControlFactor = 0.5f; // Control en el aire
     float lookRotationSpeed = 8f;
 
+    [Header("SFX")]
+    [SerializeField] private float footstepInterval = 0.5f; 
+    private float footstepTimer = 0f;
+
+
     private Vector3 targetPosition;
     private Vector3 moveDirection; // Nueva variable para almacenar dirección de movimiento
     public bool isMoving = false;
     private bool isGrounded;
+    private Vector3 lastPosition;
+    [SerializeField] private float movementDeltaLimit = 0.05f;
+
 
     private void Awake()
     {
@@ -39,6 +47,8 @@ public class Controller : MonoBehaviour
         rb.freezeRotation = true; // Bloquea la rotación del Rigidbody
         AssingInputs();
         targetPosition = transform.position;
+        lastPosition = transform.position;
+
     }
 
     private void Update()
@@ -83,19 +93,40 @@ public class Controller : MonoBehaviour
         }
     }
 
-    void FixedUpdate()
-    {
+    void 
+    FixedUpdate(){
         isGrounded = Physics.Raycast(transform.position, Vector3.down, 1.1f, clickableLayer);
 
-        if (isGrounded)
-        {
+        if (isGrounded){
             transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
         }
 
-        if (isMoving)
-        {
+        if (isMoving){
             MoveCharacter();
+
+            float movementDelta = (transform.position - lastPosition).magnitude;
+
+            if (isGrounded && movementDelta > movementDeltaLimit){
+                footstepTimer += Time.fixedDeltaTime;
+                if (footstepTimer >= footstepInterval){
+                    AudioManager.instance.PlayFootstep();
+                    footstepTimer = 0f;
+                }
+            }
+            else{
+                footstepTimer = 0f;
+            }
+        }else{
+            footstepTimer = 0f;
         }
+
+        lastPosition = transform.position;
+
+        if (Vector3.Distance(transform.position, targetPosition) < 0.1f){
+            isMoving = false;
+        }
+
+
     }
 
     /// <summary>
