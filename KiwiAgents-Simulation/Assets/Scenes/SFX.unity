@@ -3007,6 +3007,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: Kiwi LowPoly New
       objectReference: {fileID: 0}
+    - target: {fileID: 4992620500013314938, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: flySound
+      value: 
+      objectReference: {fileID: 8300000, guid: afcac1b4fad3b514ab1df3ce912adb09, type: 3}
+    - target: {fileID: 4992620500013314938, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: poopSound
+      value: 
+      objectReference: {fileID: 8300000, guid: ceddb0953a6986341bba332613f3efd9, type: 3}
+    - target: {fileID: 4992620500013314938, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: poopSounds.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4992620500013314938, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: 'poopSounds.Array.data[0]'
+      value: 
+      objectReference: {fileID: 8300000, guid: 4fc752cf004518944afc0c5863cc4b8f, type: 3}
+    - target: {fileID: 4992620500013314938, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: 'poopSounds.Array.data[1]'
+      value: 
+      objectReference: {fileID: 8300000, guid: ceddb0953a6986341bba332613f3efd9, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3958,7 +3978,7 @@ MonoBehaviour:
   airControlFactor: 0.5
   footstepInterval: 0.5
   isMoving: 0
-  movementDeltaThreshold: 0.05
+  movementDeltaLimit: 0.05
 --- !u!195 &5113153617475494800
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -4523,7 +4543,7 @@ MonoBehaviour:
   airControlFactor: 0.5
   footstepInterval: 0.5
   isMoving: 0
-  movementDeltaThreshold: 0.05
+  movementDeltaLimit: 0.05
 --- !u!195 &6122476914396721156
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -5457,7 +5477,7 @@ MonoBehaviour:
   airControlFactor: 0.5
   footstepInterval: 0.5
   isMoving: 0
-  movementDeltaThreshold: 0.05
+  movementDeltaLimit: 0.05
 --- !u!1 &8124583577120424811
 GameObject:
   m_ObjectHideFlags: 0
