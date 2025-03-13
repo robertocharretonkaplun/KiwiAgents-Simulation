@@ -2012,12 +2012,12 @@ TerrainCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_ProvidesContacts: 0
+  m_ProvidesContacts: 1
   m_Enabled: 1
   serializedVersion: 2
   m_TerrainData: {fileID: 15600000, guid: a2ff7916a1b88d944a4660205dc550d5, type: 2}
@@ -2177,6 +2177,22 @@ PrefabInstance:
     - target: {fileID: 2484785316546593465, guid: 9eb84a8672d7abd4a891d24bf7e06061, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 2488944903886923976, guid: 9eb84a8672d7abd4a891d24bf7e06061, type: 3}
+      propertyPath: m_Drag
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2488944903886923976, guid: 9eb84a8672d7abd4a891d24bf7e06061, type: 3}
+      propertyPath: m_Mass
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 2488944903886923976, guid: 9eb84a8672d7abd4a891d24bf7e06061, type: 3}
+      propertyPath: m_Constraints
+      value: 112
+      objectReference: {fileID: 0}
+    - target: {fileID: 2488944903886923976, guid: 9eb84a8672d7abd4a891d24bf7e06061, type: 3}
+      propertyPath: m_IncludeLayers.m_Bits
+      value: 64
       objectReference: {fileID: 0}
     - target: {fileID: 2502709083075739653, guid: 9eb84a8672d7abd4a891d24bf7e06061, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -6586,6 +6602,10 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2152331885986197412, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: m_Weight
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2298112043148453137, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 0
@@ -6593,6 +6613,14 @@ PrefabInstance:
     - target: {fileID: 2301128906332336303, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2750345104506467516, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: m_Mass
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 2857846140564435877, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: m_Weight
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2932935107373772258, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
       propertyPath: m_StaticEditorFlags
