@@ -1,10 +1,9 @@
-
 using UnityEngine;
 using UnityEngine.AI;
 
 public class TraditionalControllerIv : MonoBehaviour
 {
-     public static TraditionalControllerIv instance;
+    public static TraditionalControllerIv instance;
 
     [Header("Agente")]
     CustomAccion input;
@@ -14,14 +13,20 @@ public class TraditionalControllerIv : MonoBehaviour
     [SerializeField] ParticleSystem clickEfect;
     [SerializeField] LayerMask clickableLayer;
 
-    [Header("Animator By Bruwwu")] 
+    [Header("Animator By Bruwwu")]
     public Rigidbody kiwiRb;
     public Animator kiwiAnimator;
     float lookRotationSpeed = 8f;
 
     [Header("Jump Settings")]
-    [SerializeField] private float jumpForce = 5f; // Ajusta qué tan alto salta
+    [SerializeField] private float jumpForce = 5f;
     private bool isJumping = false;
+
+    // 🔹 Variables para detectar doble clic y cambiar velocidad
+    private float lastClickTime = 0f;
+    private float doubleClickThreshold = 0.3f;
+    private float normalSpeed;
+    [SerializeField] private float sprintSpeed = 10f;
 
     private void Awake()
     {
@@ -41,6 +46,7 @@ public class TraditionalControllerIv : MonoBehaviour
         {
             Debug.LogError("Agent was null, check for component.");
         }
+        normalSpeed = agent.speed; // Guardamos la velocidad normal
         AssingInputs();
     }
 
@@ -49,23 +55,22 @@ public class TraditionalControllerIv : MonoBehaviour
         FaceTarget();
         UpdateBlendTree();
 
-        // Salto con la tecla Space
         if (Input.GetKeyDown(KeyCode.Space) && !isJumping)
         {
             Jump();
         }
     }
 
-    void OnEnable()
-    {
-        input.Enable();
-    }
+  void OnEnable()
+{
+    if (input == null) input = new CustomAccion(); // 🔹 Asegurar que `input` no es null
+    input.Enable();
+}
 
-    void OnDisable()
-    {
-        input.Disable();
-    }
-
+void OnDisable()
+{
+    if (input != null) input.Disable(); // 🔹 Evitar deshabilitar si ya es null
+}
     void AssingInputs()
     {
         input.Main.Move.performed += ctx => ClicKToMove();
@@ -76,11 +81,22 @@ public class TraditionalControllerIv : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, clickableLayer))
         {
-            if (agent != null && !isJumping) // Solo permitir moverse si no está saltando
+            if (agent != null && !isJumping)
             {
-                agent.isStopped = false; // Asegurar que el NavMeshAgent sigue funcionando
+                float timeSinceLastClick = Time.time - lastClickTime;
+                lastClickTime = Time.time;
+
+                if (timeSinceLastClick <= doubleClickThreshold)
+                {
+                    agent.speed = sprintSpeed;
+                    CancelInvoke(nameof(ResetSpeed));
+                    Invoke(nameof(ResetSpeed), 1.5f);
+                }
+
+                agent.isStopped = false;
                 agent.SetDestination(hit.point);
             }
+
             if (clickEfect != null)
             {
                 ParticleSystem Effect = Instantiate(clickEfect, hit.point + new Vector3(0, 0.1f, 0), clickEfect.transform.rotation);
@@ -89,9 +105,14 @@ public class TraditionalControllerIv : MonoBehaviour
         }
     }
 
+    void ResetSpeed()
+    {
+        agent.speed = normalSpeed;
+    }
+
     void FaceTarget()
     {
-        if (agent.velocity.magnitude > 0.1f) // Solo rotar si se está moviendo
+        if (agent.velocity.magnitude > 0.1f)
         {
             Vector3 direccion = (agent.destination - transform.position).normalized;
             Quaternion lookRotation = Quaternion.LookRotation(direccion);
@@ -107,17 +128,14 @@ public class TraditionalControllerIv : MonoBehaviour
         }
     }
 
-    // ----------------- LÓGICA DE SALTO ----------------- //
-
     void Jump()
     {
         if (!isJumping)
         {
             isJumping = true;
-            agent.enabled = false; // Desactiva el NavMeshAgent SOLO mientras dura el salto
+            agent.enabled = false;
             kiwiRb.linearVelocity = new Vector3(kiwiRb.linearVelocity.x, jumpForce, kiwiRb.linearVelocity.z);
 
-            // Aquí puedes agregar la animación de salto cuando la tengas
             if (kiwiAnimator != null)
             {
                 // kiwiAnimator.SetTrigger("Jump");
@@ -127,12 +145,10 @@ public class TraditionalControllerIv : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Ground")) // Detectar si aterriza
+        if (collision.gameObject.CompareTag("Ground"))
         {
             isJumping = false;
-            agent.enabled = true; // Reactivar el NavMeshAgent para caminar normal
+            agent.enabled = true;
         }
     }
 }
-
-
