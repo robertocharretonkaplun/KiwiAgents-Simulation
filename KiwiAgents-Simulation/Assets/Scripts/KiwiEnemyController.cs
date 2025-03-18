@@ -66,4 +66,15 @@ public class KiwiEnemyController : MonoBehaviour
     OnDestroy() {
         PoopController.OnPoopStatusChanged -= HandlePoopStatus;
     }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            Debug.Log("El Kiwi enemigo tocó al jugador");
+            
+            // Código por si choca con el jugador
+        }
+    }
+
 }
