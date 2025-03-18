@@ -11,12 +11,12 @@ public class LClickFreeCamera : MonoBehaviour
 
    void Update()
    {
-    if (Input.GetMouseButtonDown(1))
+    if (Input.GetKeyDown((KeyCode.C)))
     {
         freeCamera.Priority = 1;
         mainCamera.Priority = 2;
     }
-    else if (Input.GetMouseButtonUp(1)) //Ese mi I AM A GAME DESIGNER no chambea, 0 procedural de su parte -3-
+    else if (Input.GetKeyUp((KeyCode.C))) //Ese mi I AM A GAME DESIGNER no chambea, 0 procedural de su parte -3-
     {
         freeCamera.Priority = 2;
         mainCamera.Priority = 1;
