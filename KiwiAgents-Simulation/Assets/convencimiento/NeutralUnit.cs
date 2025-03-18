@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class NeutralUnit : MonoBehaviour
 {
-    public int requiredItems = 5; // Número de objetos necesarios
+    public int requiredItems = 3; // Número de objetos necesarios
     public string playerUnitLayer = "Clickable"; // Layer al que se cambiará
     public int currentItems = 0;
     public GameObject NeutralIndicator;
@@ -12,17 +12,14 @@ public class NeutralUnit : MonoBehaviour
 
     void Update()
     {
-        // Si la unidad ya se convirtió, no hace nada
-        if (isConverted) return;
-
         // Comprueba si el número de objetos es suficiente y la unidad aún no ha sido convertida
-        if (currentItems >= requiredItems)
+        if (currentItems >= requiredItems && !isConverted)
         {
             ConvertToAlly();
         }
 
-        // Si hay una unidad aliada cerca y se hace clic derecho, intenta entregar un objeto
-        if (unidadAliadaCerca && Input.GetMouseButtonDown(1)) // 1 = clic derecho
+        // Si hay una unidad aliada cerca, no está convertida y se hace clic izquierdo, intenta entregar un objeto
+        if (unidadAliadaCerca && !isConverted && Input.GetMouseButtonDown(0)) // 0 = clic izquierdo
         {
             TryDeliverItem();
         }
@@ -30,23 +27,20 @@ public class NeutralUnit : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        // Si la unidad ya se convirtió, no hace nada
-        if (isConverted) return;
-
-        // Verifica si el objeto que entra es una unidad aliada (usando el tag "Player")
+        // Verifica si el objeto que entra es una unidad aliada
         if (other.CompareTag("Player"))
         {
             unidadAliadaCerca = true;
-            Debug.Log("Unidad aliada cerca. Haz clic derecho para entregar un objeto.");
+            if (!isConverted)
+            {
+                Debug.Log("Unidad aliada cerca. Haz clic izquierdo para entregar un objeto.");
+            }
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        // Si la unidad ya se convirtió, no hace nada
-        if (isConverted) return;
-
-        // Verifica si el objeto que sale es una unidad aliada (usando el tag "Player")
+        // Verifica si el objeto que sale es una unidad aliada
         if (other.CompareTag("Player"))
         {
             unidadAliadaCerca = false;
@@ -56,9 +50,6 @@ public class NeutralUnit : MonoBehaviour
 
     private void TryDeliverItem()
     {
-        // Si la unidad ya se convirtió, no hace nada
-        if (isConverted) return;
-
         // Verifica si el jugador tiene objetos para entregar
         if (GameManager.Instance.semillasRecolectadas > 0)
         {
@@ -74,14 +65,18 @@ public class NeutralUnit : MonoBehaviour
 
     void ConvertToAlly()
     {
-        isConverted = true; // Marca la unidad como convertida
+        isConverted = true;
         gameObject.layer = LayerMask.NameToLayer(playerUnitLayer); // Cambia la layer
         gameObject.tag = "Player"; // Cambia el tag a "Player"
-        Debug.Log("Unidad convertida en aliada. Tag cambiado a 'Player'.");
+        Debug.Log("Unidad convertida en aliada.");
 
         if (NeutralIndicator != null)
         {
             NeutralIndicator.SetActive(false); // Desactiva el indicador visual
         }
+
+        // Desactiva la capacidad de recibir más objetos
+        unidadAliadaCerca = false; // Ya no necesita estar cerca de una unidad aliada
+        Debug.Log("La unidad neutral ya no acepta más objetos.");
     }
 }

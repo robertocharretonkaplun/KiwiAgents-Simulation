@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Semilla : MonoBehaviour
 {
-   
+    public float distanciaRecoleccion = 2f; // Rango de recolección
     private bool unidadAliadaCerca = false;
 
     private void OnTriggerEnter(Collider other)
@@ -11,7 +11,7 @@ public class Semilla : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             unidadAliadaCerca = true;
-            Debug.Log("Unidad aliada cerca. Haz clic derecho para recolectar la semilla.");
+            Debug.Log("Unidad aliada cerca. Haz clic izquierdo para recolectar la semilla.");
         }
     }
 
@@ -27,8 +27,8 @@ public class Semilla : MonoBehaviour
 
     private void Update()
     {
-        // Si hay una unidad aliada cerca y se hace clic derecho, recolecta la semilla
-        if (unidadAliadaCerca && Input.GetMouseButtonDown(1)) // 1 = clic derecho
+        // Si hay una unidad aliada cerca y se hace clic izquierdo, recolecta la semilla
+        if (unidadAliadaCerca && Input.GetMouseButtonDown(0)) // 0 = clic izquierdo
         {
             Recolectar();
         }
