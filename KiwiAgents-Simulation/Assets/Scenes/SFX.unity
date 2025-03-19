@@ -3010,7 +3010,7 @@ PrefabInstance:
     - target: {fileID: 4992620500013314938, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
       propertyPath: flySound
       value: 
-      objectReference: {fileID: 8300000, guid: afcac1b4fad3b514ab1df3ce912adb09, type: 3}
+      objectReference: {fileID: 8300000, guid: 3afa2750b5980b446a5ea465d692edc6, type: 3}
     - target: {fileID: 4992620500013314938, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
       propertyPath: poopSound
       value: 
@@ -3022,11 +3022,11 @@ PrefabInstance:
     - target: {fileID: 4992620500013314938, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
       propertyPath: 'poopSounds.Array.data[0]'
       value: 
-      objectReference: {fileID: 8300000, guid: 4fc752cf004518944afc0c5863cc4b8f, type: 3}
+      objectReference: {fileID: 8300000, guid: 836efdc2db65a3741ad64ecbb6ba1d07, type: 3}
     - target: {fileID: 4992620500013314938, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
       propertyPath: 'poopSounds.Array.data[1]'
       value: 
-      objectReference: {fileID: 8300000, guid: ceddb0953a6986341bba332613f3efd9, type: 3}
+      objectReference: {fileID: 8300000, guid: ad41dd0d0ec6a954e9db50651ca5474e, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
