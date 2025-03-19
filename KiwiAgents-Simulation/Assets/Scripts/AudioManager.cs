@@ -6,7 +6,7 @@ public class AudioManager : MonoBehaviour
 
     [Header("Audio Settings")]
     public AudioSource audioSource;    
-    public AudioClip footstepSound;
+    public AudioClip[] footstepSounds;  // Array de sonidos de pasos
 
     private AudioSource flyAudioSource; 
 
@@ -25,14 +25,15 @@ public class AudioManager : MonoBehaviour
 
     public void PlayFootstep()
     {
-    if (footstepSound != null && audioSource != null)
-    {
-        audioSource.PlayOneShot(footstepSound);
-    }
-    else
-    {
-        Debug.LogWarning("Falta asignar AudioSource o FootstepSound en el AudioManager");
-    }
+        if (footstepSounds.Length > 0 && audioSource != null)
+        {
+            int randomIndex = Random.Range(0, footstepSounds.Length);  // Seleccionar un sonido de paso aleatorio
+            audioSource.PlayOneShot(footstepSounds[randomIndex]);
+        }
+        else
+        {
+            Debug.LogWarning("Falta asignar AudioSource o no hay sonidos de pasos en el AudioManager.");
+        }
     }
 
     public void PlaySound(AudioClip clip)

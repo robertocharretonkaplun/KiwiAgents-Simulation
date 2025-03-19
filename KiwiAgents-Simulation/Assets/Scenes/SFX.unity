@@ -597,7 +597,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioSource: {fileID: 482843948}
-  footstepSound: {fileID: 8300000, guid: 1d37eae4e40b7854087888e24dc5ce12, type: 3}
+  footstepSounds:
+  - {fileID: 8300000, guid: e3725de91f3031847ba8af35d8f71384, type: 3}
+  - {fileID: 8300000, guid: 03ce5076c73ae184385354e72d3938dd, type: 3}
+  - {fileID: 8300000, guid: e5887e2567cd29149be850bf60dfd034, type: 3}
+  - {fileID: 8300000, guid: ebf05990f0130554c85f125a14e68990, type: 3}
+  - {fileID: 8300000, guid: 584d0a56c55b2894786df9abc9dde90a, type: 3}
+  - {fileID: 8300000, guid: 73debf7d4b51ca2479b4aadfb614b30e, type: 3}
+  - {fileID: 8300000, guid: 1d37eae4e40b7854087888e24dc5ce12, type: 3}
+  - {fileID: 8300000, guid: 078dd1bc8ed61414ba2f7c48bd138962, type: 3}
+  - {fileID: 8300000, guid: c45a4ad6746efc64498d0c7ce3537995, type: 3}
 --- !u!82 &482843948
 AudioSource:
   m_ObjectHideFlags: 0
