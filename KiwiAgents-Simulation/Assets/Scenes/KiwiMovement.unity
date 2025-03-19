@@ -219,6 +219,11 @@ MonoBehaviour:
   movingDown: 0
   movingBackwards: 0
   otherLeg: {fileID: 99722748}
+--- !u!4 &107478162 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 227669728265591052, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+  m_PrefabInstance: {fileID: 2766240621733946372}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &119124928
 GameObject:
   m_ObjectHideFlags: 0
@@ -250,6 +255,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 7214738637869524298}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &204742103 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1735130746974041584, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+  m_PrefabInstance: {fileID: 2766240621733946372}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &245231666
 GameObject:
   m_ObjectHideFlags: 0
@@ -1300,6 +1310,11 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 0
+--- !u!4 &1673142422 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4151137008403917502, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+  m_PrefabInstance: {fileID: 2766240621733946372}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1696332009
 GameObject:
   m_ObjectHideFlags: 0
@@ -2851,6 +2866,42 @@ PrefabInstance:
       propertyPath: m_Name
       value: Kiwi LowPoly New
       objectReference: {fileID: 0}
+    - target: {fileID: 9122530828213374217, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: jawBone
+      value: 
+      objectReference: {fileID: 204742103}
+    - target: {fileID: 9122530828213374217, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: headTransform
+      value: 
+      objectReference: {fileID: 204742103}
+    - target: {fileID: 9122530828213374217, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: neckTransform
+      value: 
+      objectReference: {fileID: 1673142422}
+    - target: {fileID: 9122530828213374217, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: walkTiltAngle
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 9122530828213374217, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: walkTiltSpeed
+      value: 1.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9122530828213374217, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: playerTransform
+      value: 
+      objectReference: {fileID: 107478162}
+    - target: {fileID: 9122530828213374217, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: walkBounceSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9122530828213374217, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: walkBounceHeight
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9122530828213374217, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: idleRotationSpeed
+      value: 20
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3799,6 +3850,8 @@ MonoBehaviour:
     m_Bits: 0
   jumpForce: 5
   moveSpeed: 5
+  airControlFactor: 0.5
+  isMoving: 0
 --- !u!195 &5113153617475494800
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -4360,6 +4413,8 @@ MonoBehaviour:
     m_Bits: 0
   jumpForce: 5
   moveSpeed: 5
+  airControlFactor: 0.5
+  isMoving: 0
 --- !u!195 &6122476914396721156
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -5290,6 +5345,8 @@ MonoBehaviour:
     m_Bits: 0
   jumpForce: 5
   moveSpeed: 5
+  airControlFactor: 0.5
+  isMoving: 0
 --- !u!1 &8124583577120424811
 GameObject:
   m_ObjectHideFlags: 0
