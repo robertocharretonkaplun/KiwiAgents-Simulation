@@ -38,30 +38,40 @@ public class PoopController : MonoBehaviour
         input.Main.Poop.performed += ctx => ClicKToPoop();
     }
 
-    void ClicKToPoop() {
-        if (activePoops.Count < maxPoops) {
-            GameObject PoopTemporal = Instantiate(Poop, PoopPosition.transform.position, PoopPosition.transform.rotation);
-            activePoops.Add(PoopTemporal);
+    void ClicKToPoop()
+    {
+        if (activePoops.Count < maxPoops)
+        {
+            GameObject poopTemporal = Instantiate(Poop, PoopPosition.transform.position, PoopPosition.transform.rotation);
+            activePoops.Add(poopTemporal);
             OnPoopStatusChanged?.Invoke(true);
-            Destroy(PoopTemporal, 5f);
-            StartCoroutine(RemovePoopFromList(PoopTemporal, 5f));
+            Destroy(poopTemporal, 5f);
+            StartCoroutine(RemovePoopFromList(poopTemporal, 5f));
 
-            // Reproducir sonido de popó aleatorio
-            if (AudioManager.instance != null && poopSounds.Length > 0) {
-                int randomIndex = Random.Range(0, poopSounds.Length);  
+            // Reproducir sonido de popó aleatorio (global, a través del AudioManager)
+            if (AudioManager.instance != null && poopSounds.Length > 0)
+            {
+                int randomIndex = Random.Range(0, poopSounds.Length);
                 AudioManager.instance.PlaySound(poopSounds[randomIndex]);
             }
 
-            // Iniciar sonido de moscas después de un pequeño retraso
-            StartCoroutine(PlayFlySoundAfterDelay(0.1f));
+            // Iniciar el sonido de moscas en el objeto de la popó después de un pequeño retraso
+            StartCoroutine(PlayFlySoundAfterDelay(poopTemporal, 0.1f));
         }
     }
 
-    private IEnumerator PlayFlySoundAfterDelay(float delay) {
+    private IEnumerator PlayFlySoundAfterDelay(GameObject poopInstance, float delay) {
         yield return new WaitForSeconds(delay);
+        //Obtener el componente AudioSource del objeto popó
+        AudioSource audioSource = poopInstance.GetComponent<AudioSource>();
         if (AudioManager.instance != null) {
-            AudioManager.instance.PlayLoopingSound(flySound);
+            audioSource = poopInstance.AddComponent<AudioSource>();
         }
+        // Configura el AudioSource para sonido 3D
+        audioSource.clip = flySound;
+        audioSource.loop = true;
+        audioSource.spatialBlend = 1f;  // 1 = 3D
+        audioSource.Play();
     }
 
     private IEnumerator RemovePoopFromList(GameObject poop, float delay) {
