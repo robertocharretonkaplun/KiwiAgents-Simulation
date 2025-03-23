@@ -5891,6 +5891,14 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2398625386810122563, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: stepDistance
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 2398625386810122563, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: minFootSpacing
+      value: 1.2
+      objectReference: {fileID: 0}
     - target: {fileID: 2750345104506467516, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
       propertyPath: m_Mass
       value: 100
@@ -5962,6 +5970,14 @@ PrefabInstance:
     - target: {fileID: 5000022351141582421, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5009025253250801416, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: stepDistance
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 5009025253250801416, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: minFootSpacing
+      value: 1.2
       objectReference: {fileID: 0}
     - target: {fileID: 5189183580017772773, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -12723,7 +12739,7 @@ GameObject:
   - component: {fileID: 1271617591}
   m_Layer: 0
   m_Name: CinemachineBrain
-  m_TagString: Untagged
+  m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -14438,7 +14454,7 @@ GameObject:
   - component: {fileID: 1406403616}
   m_Layer: 0
   m_Name: Follow Camera
-  m_TagString: Untagged
+  m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -16966,7 +16982,7 @@ GameObject:
   - component: {fileID: 1688433027}
   m_Layer: 0
   m_Name: FreeLook Camera
-  m_TagString: Untagged
+  m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -19949,7 +19965,7 @@ GameObject:
   - component: {fileID: 1956383346}
   m_Layer: 0
   m_Name: LClickCamera
-  m_TagString: Untagged
+  m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
