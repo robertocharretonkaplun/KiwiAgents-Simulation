@@ -20,6 +20,9 @@ public class Controller : MonoBehaviour
     [SerializeField] private float footstepInterval = 0.5f; 
     private float footstepTimer = 0f;
 
+    [Header("Render Objects")]
+    public Material[] targetMaterial;
+    public string propertyName = "_Alpha"; // Nombre de la propiedad del shader
 
     private Vector3 targetPosition;
     private Vector3 moveDirection; // Nueva variable para almacenar dirección de movimiento
@@ -49,6 +52,11 @@ public class Controller : MonoBehaviour
         targetPosition = transform.position;
         lastPosition = transform.position;
 
+        foreach (var material in targetMaterial)
+        {
+            material.SetFloat("_Alpha", 0.0f); // Cambia el valor de la propiedad
+        }
+
     }
 
     private void Update()
@@ -70,6 +78,28 @@ public class Controller : MonoBehaviour
         input.Disable();
     }
 
+     void ChangeMaterialProperty()
+    {
+            Debug.Log("Cambiando propiedad del material");
+            
+            foreach (var material in targetMaterial)
+            {
+                material.SetFloat("_Alpha", 1.0f); // Cambia el valor de la propiedad
+            }
+
+            Invoke("ResetMaterialProperty", 5.0f); // Resetea la propiedad después de 1 segundo
+    }
+
+    void ResetMaterialProperty()
+    {
+            Debug.Log("Reseteando propiedad del material");
+
+            foreach (var material in targetMaterial)
+            {
+                material.SetFloat("_Alpha", 0.0f); // Cambia el valor de la propiedad
+            }
+    }
+
     /// <summary>
     /// Configura los inputs necesarios para el movimiento del personaje.
     /// </summary>
@@ -77,7 +107,9 @@ public class Controller : MonoBehaviour
     {
         input.Main.Move.performed += ctx => ClickToMove();
         input.Main.Jump.performed += ctx => Jump();
+        input.Main.Scanner.performed += ctx => ChangeMaterialProperty();
     }
+
 
     /// <summary>
     /// Se usa un Raycast para detectar la posición donde se hizo clic y mover al personaje.
