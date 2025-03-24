@@ -6113,7 +6113,7 @@ PrefabInstance:
       objectReference: {fileID: 1404394449}
     - target: {fileID: 9122530828213374217, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
       propertyPath: walkTiltAngle
-      value: 2.5
+      value: 8.5
       objectReference: {fileID: 0}
     - target: {fileID: 9122530828213374217, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
       propertyPath: walkTiltSpeed
@@ -6129,11 +6129,15 @@ PrefabInstance:
       objectReference: {fileID: 669683498}
     - target: {fileID: 9122530828213374217, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
       propertyPath: walkBounceSpeed
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 9122530828213374217, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
       propertyPath: walkBounceHeight
-      value: 1.5
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 9122530828213374217, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: idleRotationSpeed
+      value: 20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

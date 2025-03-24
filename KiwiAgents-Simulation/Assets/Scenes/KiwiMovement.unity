@@ -2880,7 +2880,7 @@ PrefabInstance:
       objectReference: {fileID: 1673142422}
     - target: {fileID: 9122530828213374217, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
       propertyPath: walkTiltAngle
-      value: 8
+      value: 8.5
       objectReference: {fileID: 0}
     - target: {fileID: 9122530828213374217, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
       propertyPath: walkTiltSpeed
@@ -2892,11 +2892,11 @@ PrefabInstance:
       objectReference: {fileID: 107478162}
     - target: {fileID: 9122530828213374217, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
       propertyPath: walkBounceSpeed
-      value: 5
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 9122530828213374217, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
       propertyPath: walkBounceHeight
-      value: 1.5
+      value: 5.5
       objectReference: {fileID: 0}
     - target: {fileID: 9122530828213374217, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
       propertyPath: idleRotationSpeed
