@@ -57,7 +57,7 @@ public partial class @CustomAccion: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""Scanner"",
                     ""type"": ""Button"",
-                    ""id"": ""fabc9ca8-6d75-4277-8851-c43897880ac2"",
+                    ""id"": ""e14b31a4-235f-4b81-bfbd-0005ebcc1fca"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -100,7 +100,7 @@ public partial class @CustomAccion: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""17295bc5-e2f8-40f8-a8b7-a40d904fa55e"",
+                    ""id"": ""95d80aeb-c8da-458b-8927-5b5fa3426639"",
                     ""path"": ""<Keyboard>/f"",
                     ""interactions"": """",
                     ""processors"": """",
