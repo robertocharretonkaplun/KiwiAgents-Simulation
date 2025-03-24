@@ -53,15 +53,6 @@ public partial class @CustomAccion: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Scanner"",
-                    ""type"": ""Button"",
-                    ""id"": ""e14b31a4-235f-4b81-bfbd-0005ebcc1fca"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -97,17 +88,6 @@ public partial class @CustomAccion: IInputActionCollection2, IDisposable
                     ""action"": ""Poop"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""95d80aeb-c8da-458b-8927-5b5fa3426639"",
-                    ""path"": ""<Keyboard>/f"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Scanner"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -119,7 +99,6 @@ public partial class @CustomAccion: IInputActionCollection2, IDisposable
         m_Main_Move = m_Main.FindAction("Move", throwIfNotFound: true);
         m_Main_Jump = m_Main.FindAction("Jump", throwIfNotFound: true);
         m_Main_Poop = m_Main.FindAction("Poop", throwIfNotFound: true);
-        m_Main_Scanner = m_Main.FindAction("Scanner", throwIfNotFound: true);
     }
 
     ~@CustomAccion()
@@ -189,7 +168,6 @@ public partial class @CustomAccion: IInputActionCollection2, IDisposable
     private readonly InputAction m_Main_Move;
     private readonly InputAction m_Main_Jump;
     private readonly InputAction m_Main_Poop;
-    private readonly InputAction m_Main_Scanner;
     public struct MainActions
     {
         private @CustomAccion m_Wrapper;
@@ -197,7 +175,6 @@ public partial class @CustomAccion: IInputActionCollection2, IDisposable
         public InputAction @Move => m_Wrapper.m_Main_Move;
         public InputAction @Jump => m_Wrapper.m_Main_Jump;
         public InputAction @Poop => m_Wrapper.m_Main_Poop;
-        public InputAction @Scanner => m_Wrapper.m_Main_Scanner;
         public InputActionMap Get() { return m_Wrapper.m_Main; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -216,9 +193,6 @@ public partial class @CustomAccion: IInputActionCollection2, IDisposable
             @Poop.started += instance.OnPoop;
             @Poop.performed += instance.OnPoop;
             @Poop.canceled += instance.OnPoop;
-            @Scanner.started += instance.OnScanner;
-            @Scanner.performed += instance.OnScanner;
-            @Scanner.canceled += instance.OnScanner;
         }
 
         private void UnregisterCallbacks(IMainActions instance)
@@ -232,9 +206,6 @@ public partial class @CustomAccion: IInputActionCollection2, IDisposable
             @Poop.started -= instance.OnPoop;
             @Poop.performed -= instance.OnPoop;
             @Poop.canceled -= instance.OnPoop;
-            @Scanner.started -= instance.OnScanner;
-            @Scanner.performed -= instance.OnScanner;
-            @Scanner.canceled -= instance.OnScanner;
         }
 
         public void RemoveCallbacks(IMainActions instance)
@@ -257,6 +228,5 @@ public partial class @CustomAccion: IInputActionCollection2, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnPoop(InputAction.CallbackContext context);
-        void OnScanner(InputAction.CallbackContext context);
     }
 }
