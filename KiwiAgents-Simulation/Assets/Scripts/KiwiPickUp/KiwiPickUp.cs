@@ -1,19 +1,18 @@
 using UnityEngine;
 using TMPro;
-using System.Collections.Generic; 
 
 public class KiwiFoodPickUp : MonoBehaviour
-    //APuntes
-    // Faltan errores por solucionar ya que si suelta el gusanito no puede revolver a recojer ese mismo, revisar logica y poder poner animacion para que se vea el pick up de gusanito
 {
     [Header("Configuración de recolección")]
     public Collider pickUpTrigger; // Referencia al Collider de recolección
+    public Transform wormHoldPosition; // Posición donde se mostrará el gusano al recogerlo
+    public Vector3 wormRotation; // Rotación ajustable desde el inspector
 
     [Header("UI")]
     public TextMeshProUGUI pickupText; // UI para mostrar el contador
 
-    private List<GameObject> inventory = new List<GameObject>(); // Lista de objetos recogidos
-    private GameObject objectToPickUp; // Referencia al objeto en la zona de recogida
+    private GameObject objectToPickUp; // Gusano disponible para recoger
+    private GameObject heldWorm; // Gusano actualmente sostenido
 
     private void Start()
     {
@@ -22,7 +21,7 @@ public class KiwiFoodPickUp : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("WormFood") && other != pickUpTrigger) // Verifica que no sea el mismo collider
+        if (other.CompareTag("WormFood") && other != pickUpTrigger && heldWorm == null)
         {
             objectToPickUp = other.gameObject;
         }
@@ -38,41 +37,40 @@ public class KiwiFoodPickUp : MonoBehaviour
 
     private void Update()
     {
-        if (objectToPickUp != null && Input.GetKeyDown(KeyCode.P)) // "P" para recoger
+        if (objectToPickUp != null && Input.GetKeyDown(KeyCode.E)) // "E" para recoger
         {
-            PickUpItem(objectToPickUp);
+            PickUpItem();
         }
 
-        if (inventory.Count > 0 && Input.GetKeyDown(KeyCode.O)) // "O" para soltar
+        if (heldWorm != null && Input.GetKeyDown(KeyCode.Q)) // "Q" para soltar
         {
             DropItem();
         }
     }
 
-    private void PickUpItem(GameObject item)
+    private void PickUpItem()
     {
-        inventory.Add(item);
-        item.SetActive(false); // Oculta el objeto
+        heldWorm = objectToPickUp;
+        heldWorm.SetActive(false); // Oculta el objeto en la escena
+        heldWorm.transform.SetParent(wormHoldPosition); 
+        heldWorm.transform.localPosition = Vector3.zero; 
+        heldWorm.transform.localRotation = Quaternion.Euler(wormRotation); // Aplica la rotación desde el Inspector
+        heldWorm.SetActive(true); 
         objectToPickUp = null;
         UpdateUI();
-        Debug.Log("Nadie me quiere, todos me odian, mejor me como un gusanito");
     }
 
-
-    //Suelta el gusanito enfrente del jugador
     private void DropItem()
     {
-        GameObject item = inventory[inventory.Count - 1];
-        inventory.RemoveAt(inventory.Count - 1);
-        item.SetActive(true);
-        item.transform.position = transform.position + transform.forward * 2; // Lo coloca enfrente del jugador
+        heldWorm.transform.SetParent(null); 
+        heldWorm.transform.position = transform.position + transform.forward * 2; // Lo coloca enfrente
+        heldWorm.SetActive(true);
+        heldWorm = null;
         UpdateUI();
-        Debug.Log("sabe feo, what color  == WAKALA ");
     }
 
     private void UpdateUI()
     {
-        pickupText.text = "" + inventory.Count;
+        pickupText.text = heldWorm != null ? "1" : "0";
     }
 }
-

@@ -1077,6 +1077,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pickUpTrigger: {fileID: 761814041}
+  wormHoldPosition: {fileID: 761814040}
+  wormRotation: {x: 0, y: 0, z: 90}
   pickupText: {fileID: 1103039890}
 --- !u!1 &870382815
 GameObject:
