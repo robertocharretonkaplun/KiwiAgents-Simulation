@@ -20001,8 +20001,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78557002ec1f4e842a6abe540da3e844, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  freeCamera: {fileID: 1406403618}
-  mainCamera: {fileID: 1688433031}
+  followCam: {fileID: 1406403618}
+  freeCam: {fileID: 1688433031}
+  minZoom: 50
+  maxZoom: 80
+  smoothSpeed: 0.25
+  zoomMultiplier: 10
+  freeCamZoom: 0
+  mainCamZoom: 0
+  isFreeCamActive: 0
 --- !u!1001 &1957731638
 PrefabInstance:
   m_ObjectHideFlags: 0
