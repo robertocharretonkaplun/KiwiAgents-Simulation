@@ -20,9 +20,9 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Toon_Plants 1
+  m_Name: Toon_Plants 8
   m_Shader: {fileID: -6465566751694194690, guid: 75752c03bad759e499f46ead3e245023, type: 3}
-  m_Parent: {fileID: 2100000, guid: 870ef4b077a8a4b47a28b367a7f2cbff, type: 2}
+  m_Parent: {fileID: 2100000, guid: 490f20d9aa1de50458144edc60cc57e1, type: 2}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords: []
@@ -40,6 +40,6 @@ Material:
     m_Ints: []
     m_Floats: []
     m_Colors:
-    - _Color: {r: 0.4666667, g: 0.5686275, b: 0.16078432, a: 1}
+    - _Color: {r: 0.2198291, g: 0.4716981, b: 0.25131273, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
