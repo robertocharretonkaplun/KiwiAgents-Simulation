@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-167706225650090422
+--- !u!114 &-6787269723390705665
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
@@ -20,9 +20,9 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Green_Prototype
-  m_Shader: {fileID: -6465566751694194690, guid: 74686ab863fe0dc4598560e65eb847eb, type: 3}
-  m_Parent: {fileID: 2100000, guid: f1e38594f14520c48bc546f3a41f4f56, type: 2}
+  m_Name: Toon_Plants 6
+  m_Shader: {fileID: -6465566751694194690, guid: 75752c03bad759e499f46ead3e245023, type: 3}
+  m_Parent: {fileID: -876546973899608171, guid: 75752c03bad759e499f46ead3e245023, type: 3}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords: []
@@ -38,10 +38,9 @@ Material:
     serializedVersion: 3
     m_TexEnvs: []
     m_Ints: []
-    m_Floats: []
+    m_Floats:
+    - _QueueControl: 0
     m_Colors:
-    - Color_2d523c9e87ea411c87ba7d7b977b62e7: {r: 0.0018211621, g: 0.65837497, b: 0.3662527, a: 0}
-    - Color_7F5D350D: {r: 0, g: 0, b: 0, a: 0.2509804}
-    - Color_BE5A53D8: {r: 0.0018211621, g: 0.65837497, b: 0.3662527, a: 0}
+    - _Color: {r: 0.7254902, g: 0.69411767, b: 0.21176472, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

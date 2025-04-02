@@ -18,9 +18,11 @@ public class PoopController : MonoBehaviour
     public delegate void PoopEvent(bool hasPoop);
     public static event PoopEvent OnPoopStatusChanged;
 
-    private 
-    void 
-    Awake() {
+    [Header("Audio Settings")]
+    public AudioClip[] poopSounds;  
+    public AudioClip flySound;       
+
+    private void Awake() {
         if (instance != null && instance != this) {
             return;
         }
@@ -28,46 +30,69 @@ public class PoopController : MonoBehaviour
         input = new CustomAccion();
     }
 
-    private 
-    void 
-    Start() {
+    private void Start() {
         AssingInputs();
     }
 
-    void 
-    AssingInputs() {
+    void AssingInputs() {
         input.Main.Poop.performed += ctx => ClicKToPoop();
     }
 
-    void 
-    ClicKToPoop() {
-        if (activePoops.Count < maxPoops) {
-            GameObject PoopTemporal = Instantiate(Poop, PoopPosition.transform.position, PoopPosition.transform.rotation);
-            activePoops.Add(PoopTemporal);
-            OnPoopStatusChanged?.Invoke(true); // Notificar a los enemigos que hay un Poop activo
-            Destroy(PoopTemporal, 5f);
-            StartCoroutine(RemovePoopFromList(PoopTemporal, 5f));
+    void ClicKToPoop()
+    {
+        if (activePoops.Count < maxPoops)
+        {
+            GameObject poopTemporal = Instantiate(Poop, PoopPosition.transform.position, PoopPosition.transform.rotation);
+            activePoops.Add(poopTemporal);
+            OnPoopStatusChanged?.Invoke(true);
+            Destroy(poopTemporal, 5f);
+            StartCoroutine(RemovePoopFromList(poopTemporal, 5f));
+
+            // Reproducir sonido de popó aleatorio (global, a través del AudioManager)
+            if (AudioManager.instance != null && poopSounds.Length > 0)
+            {
+                int randomIndex = Random.Range(0, poopSounds.Length);
+                AudioManager.instance.PlaySound(poopSounds[randomIndex]);
+            }
+
+            // Iniciar el sonido de moscas en el objeto de la popó después de un pequeño retraso
+            StartCoroutine(PlayFlySoundAfterDelay(poopTemporal, 0.1f));
         }
     }
 
-    private 
-    IEnumerator 
-    RemovePoopFromList(GameObject poop, 
-                       float delay) {
+    private IEnumerator PlayFlySoundAfterDelay(GameObject poopInstance, float delay) {
+        yield return new WaitForSeconds(delay);
+        //Obtener el componente AudioSource del objeto popó
+        AudioSource audioSource = poopInstance.GetComponent<AudioSource>();
+        if (AudioManager.instance != null) {
+            audioSource = poopInstance.AddComponent<AudioSource>();
+        }
+        // Configura el AudioSource para sonido 3D
+        audioSource.clip = flySound;
+        audioSource.loop = true;
+        audioSource.spatialBlend = 1f;  // 1 = 3D
+        audioSource.Play();
+    }
+
+    private IEnumerator RemovePoopFromList(GameObject poop, float delay) {
         yield return new WaitForSeconds(delay);
         activePoops.Remove(poop);
+
         if (activePoops.Count == 0) {
-            OnPoopStatusChanged?.Invoke(false); // Notificar que ya no hay Poop activo
+            OnPoopStatusChanged?.Invoke(false);
+
+            // Detener el sonido de las moscas 
+            if (AudioManager.instance != null) {
+                AudioManager.instance.StopLoopingSound();
+            }
         }
     }
 
-    void 
-    OnEnable() {
+    void OnEnable() {
         input.Enable();
     }
 
-    void 
-    OnDisable() {
+    void OnDisable() {
         input.Disable();
     }
 }

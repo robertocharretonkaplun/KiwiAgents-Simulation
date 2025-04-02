@@ -16,15 +16,21 @@ public class Controller : MonoBehaviour
     public float airControlFactor = 0.5f; // Control en el aire
     float lookRotationSpeed = 8f;
 
+    [Header("SFX")]
+    [SerializeField] private float footstepInterval = 0.5f; 
+    private float footstepTimer = 0f;
+
     [Header("Render Objects")]
     public Material[] targetMaterial;
     public string propertyName = "_Alpha"; // Nombre de la propiedad del shader
-
 
     private Vector3 targetPosition;
     private Vector3 moveDirection; // Nueva variable para almacenar dirección de movimiento
     public bool isMoving = false;
     private bool isGrounded;
+    private Vector3 lastPosition;
+    [SerializeField] private float movementDeltaLimit = 0.05f;
+
 
     private void Awake()
     {
@@ -44,8 +50,8 @@ public class Controller : MonoBehaviour
         rb.freezeRotation = true; // Bloquea la rotación del Rigidbody
         AssingInputs();
         targetPosition = transform.position;
+        lastPosition = transform.position;
 
-        // Inicializa los materiales con el valor de la propiedad
         foreach (var material in targetMaterial)
         {
             material.SetFloat("_Alpha", 0.0f); // Cambia el valor de la propiedad
@@ -72,6 +78,28 @@ public class Controller : MonoBehaviour
         input.Disable();
     }
 
+     void ChangeMaterialProperty()
+    {
+            Debug.Log("Cambiando propiedad del material");
+            
+            foreach (var material in targetMaterial)
+            {
+                material.SetFloat("_Alpha", 1.0f); // Cambia el valor de la propiedad
+            }
+
+            Invoke("ResetMaterialProperty", 5.0f); // Resetea la propiedad después de 1 segundo
+    }
+
+    void ResetMaterialProperty()
+    {
+            Debug.Log("Reseteando propiedad del material");
+
+            foreach (var material in targetMaterial)
+            {
+                material.SetFloat("_Alpha", 0.0f); // Cambia el valor de la propiedad
+            }
+    }
+
     /// <summary>
     /// Configura los inputs necesarios para el movimiento del personaje.
     /// </summary>
@@ -80,36 +108,6 @@ public class Controller : MonoBehaviour
         input.Main.Move.performed += ctx => ClickToMove();
         input.Main.Jump.performed += ctx => Jump();
         input.Main.Scanner.performed += ctx => ChangeMaterialProperty();
-    }
-
-    /// <summary>
-    /// Cambia la propiedad del material al hacer clic en el botón de escáner.
-    /// </summary>
-    void ChangeMaterialProperty()
-    {
-            Debug.Log("Cambiando propiedad del material");
-           
-            foreach (var material in targetMaterial)
-            {
-                material.SetFloat("_Alpha", 1.0f); // Cambia el valor de la propiedad
-            }
-
-
-            Invoke("ResetMaterialProperty", 5.0f); // Resetea la propiedad después de 1 segundo
-    }
-
-    /// <summary>
-    /// Resetea la propiedad del material después de un tiempo.
-    /// </summary>
-    void ResetMaterialProperty()
-    {
-            Debug.Log("Reseteando propiedad del material");
-
-
-            foreach (var material in targetMaterial)
-            {
-                material.SetFloat("_Alpha", 0.0f); // Cambia el valor de la propiedad
-            }
     }
 
 
@@ -127,19 +125,40 @@ public class Controller : MonoBehaviour
         }
     }
 
-    void FixedUpdate()
-    {
+    void 
+    FixedUpdate(){
         isGrounded = Physics.Raycast(transform.position, Vector3.down, 1.1f, clickableLayer);
 
-        if (isGrounded)
-        {
+        if (isGrounded){
             transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
         }
 
-        if (isMoving)
-        {
+        if (isMoving){
             MoveCharacter();
+
+            float movementDelta = (transform.position - lastPosition).magnitude;
+
+            if (isGrounded && movementDelta > movementDeltaLimit){
+                footstepTimer += Time.fixedDeltaTime;
+                if (footstepTimer >= footstepInterval){
+                    AudioManager.instance.PlayFootstep();
+                    footstepTimer = 0f;
+                }
+            }
+            else{
+                footstepTimer = 0f;
+            }
+        }else{
+            footstepTimer = 0f;
         }
+
+        lastPosition = transform.position;
+
+        if (Vector3.Distance(transform.position, targetPosition) < 0.1f){
+            isMoving = false;
+        }
+
+
     }
 
     /// <summary>
