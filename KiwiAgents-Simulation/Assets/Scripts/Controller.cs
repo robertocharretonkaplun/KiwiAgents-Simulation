@@ -30,7 +30,13 @@ public class Controller : MonoBehaviour
         }
 
         instance = this;
+
+        // Asegúrate de que se esté creando correctamente
         input = new CustomAccion();
+        if (input == null)
+        {
+            Debug.LogError("Error: input no fue inicializado correctamente.");
+        }
     }
 
     void Start()
@@ -39,6 +45,7 @@ public class Controller : MonoBehaviour
         rb.freezeRotation = true; // Bloquea la rotación del Rigidbody
         AssingInputs();
         targetPosition = transform.position;
+       
     }
 
     private void Update()
