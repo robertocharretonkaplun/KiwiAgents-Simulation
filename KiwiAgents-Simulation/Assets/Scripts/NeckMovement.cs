@@ -1,91 +1,135 @@
 using UnityEngine;
+using System.Collections;
 
+/// <summary>
+/// Movimiento procedural del cuello con transiciones suaves usando corrutinas.
+/// Idle: balanceo lateral (con bounce tipo respiración por rotación en X).
+/// Caminata: movimiento vertical e inclinación lateral.
+/// Si el personaje está en Idle prolongado, el movimiento se relaja pero mantiene algo de movimiento.
+/// </summary>
 public class NeckMovement : MonoBehaviour
 {
     public Transform neckBone;
     public Transform jawBone;
     public Transform playerTransform;
 
+    [Header("Idle Settings")]
     public float idleRotationSpeed = 15f;
     public float idleRotationAngle = 30f;
+    public float idleBounceHeight = 10f;
+    public float idleBounceSpeed = 2.5f;
 
-    public float walkBounceSpeed = 2f;
-    public float walkBounceHeight = 1.2f;
+    [Header("Walk Settings")]
+    public float walkBounceSpeed = 3f;
+    public float walkBounceHeight = 6f;
     public float walkTiltSpeed = 1.5f;
     public float walkTiltAngle = 4f;
     public float movementThreshold = 0.01f;
 
+    [Header("Relax Settings")]
+    public float idleRelaxDelay = 5f;
+    public float relaxedSpeedFactor = 0.2f;
+    public float relaxedAngleFactor = 0.3f;
+    public float relaxedBounceFactor = 0.3f;
+
+    private Coroutine currentRoutine;
+    private bool isMoving;
+    private Vector3 lastPosition;
+
     private float idleAngle = 0f;
     private bool movingRight = true;
-    private bool isMoving = false;
     private float walkOffset = 0f;
-    private float currentBounce = 0f;
-    private float currentTilt = 0f;
+    private float timeStill = 0f;
+    private float bounceTimer = 0f;
 
     void Start()
     {
-        // Inicializa en Idle cuando la escena empieza
-        idleAngle = 0f;
-        movingRight = true;
-        isMoving = false;
+        lastPosition = playerTransform.position;
+        currentRoutine = StartCoroutine(IdleRoutine());
+
+        // Aplicar rotación inicial para que se vea el bounce desde el inicio
+        float initBounceX = Mathf.Sin(0f) * idleBounceHeight;
+        Quaternion initRotation = Quaternion.Euler(initBounceX, 0f, 0f);
+        neckBone.localRotation = initRotation;
     }
 
     void LateUpdate()
     {
         if (neckBone == null || jawBone == null || playerTransform == null) return;
 
-        // Detectar si el jugador se está moviendo
-        isMoving = (playerTransform.position - neckBone.position).sqrMagnitude > movementThreshold;
+        isMoving = (playerTransform.position - lastPosition).sqrMagnitude > movementThreshold;
+        lastPosition = playerTransform.position;
 
-        if (isMoving)
+        if (isMoving && currentRoutine != null)
         {
-            // 🔹 Resetear valores del Idle cuando empieza a caminar
-            idleAngle = 0f;
-            movingRight = true;
-            UpdateNeckWalking();
+            StopCoroutine(currentRoutine);
+            ResetIdleState();
+            currentRoutine = StartCoroutine(WalkRoutine());
         }
-        else
+        else if (!isMoving && currentRoutine != null && currentRoutine.ToString() != "IdleRoutine")
         {
-            // 🔹 Resetear Walk cuando se detiene (limpia los valores acumulados)
-            walkOffset = 0f;
-            currentBounce = 0f;
-            currentTilt = 0f;
-            UpdateNeckIdle();
+            StopCoroutine(currentRoutine);
+            currentRoutine = StartCoroutine(IdleRoutine());
         }
 
-        // Sincroniza la mandíbula con el cuello
         jawBone.localRotation = neckBone.localRotation;
     }
 
-    /// <summary>
-    /// Movimiento del cuello en Idle (ahora ya no tiene rastros de Walk)
-    /// </summary>
-    void UpdateNeckIdle()
+    void ResetIdleState()
     {
-        // Asegura que no empiece con Walk, incluso si se cambia de estado
-        idleAngle += movingRight ? idleRotationSpeed * Time.deltaTime : -idleRotationSpeed * Time.deltaTime;
-
-        if (idleAngle > idleRotationAngle) movingRight = false;
-        else if (idleAngle < -idleRotationAngle) movingRight = true;
-
-        // 🔹 Se asegura que no hay valores del Walk activos
-        neckBone.localRotation = Quaternion.Euler(0, idleAngle, 0);
+        idleAngle = 0f;
+        movingRight = true;
+        timeStill = 0f;
+        bounceTimer = 0f;
     }
 
-    /// <summary>
-    /// Movimiento del cuello en Caminata (sin afectar el Idle después)
-    /// </summary>
-    void UpdateNeckWalking()
+    IEnumerator IdleRoutine()
     {
-        walkOffset += Time.deltaTime * walkBounceSpeed;
+        bounceTimer = 0f;
 
-        float targetBounce = Mathf.Sin(walkOffset) * walkBounceHeight;
-        float targetTilt = Mathf.Cos(walkOffset) * walkTiltAngle;
+        while (true)
+        {
+            timeStill += Time.deltaTime;
+            bounceTimer += Time.deltaTime * idleBounceSpeed;
 
-        currentBounce = Mathf.Lerp(currentBounce, targetBounce, Time.deltaTime * 10f);
-        currentTilt = Mathf.Lerp(currentTilt, targetTilt, Time.deltaTime * 10f);
+            float relaxT = Mathf.Clamp01((timeStill - idleRelaxDelay) / 3f);
+            float currentSpeed = Mathf.Lerp(idleRotationSpeed, idleRotationSpeed * relaxedSpeedFactor, relaxT);
+            float currentAngle = Mathf.Lerp(idleRotationAngle, idleRotationAngle * relaxedAngleFactor, relaxT);
+            float bounceFactor = Mathf.Lerp(1f, relaxedBounceFactor, relaxT);
+            float bounceX = Mathf.Sin(bounceTimer) * idleBounceHeight * bounceFactor;
 
-        // 🔹 Ya no tiene valores acumulados de Idle
-        neckBone.localRotation = Quaternion.Euler(currentBounce, 0, currentTilt);
+            idleAngle += movingRight ? currentSpeed * Time.deltaTime : -currentSpeed * Time.deltaTime;
+
+            if (idleAngle > currentAngle) movingRight = false;
+            else if (idleAngle < -currentAngle) movingRight = true;
+
+            Quaternion targetRotation = Quaternion.Euler(bounceX, idleAngle, 0);
+            neckBone.localRotation = Quaternion.Slerp(neckBone.localRotation, targetRotation, Time.deltaTime * 5f);
+
+            yield return null;
+        }
+    }
+
+    IEnumerator WalkRoutine()
+    {
+        walkOffset = 0f;
+        float currentBounce = 0f;
+        float currentTilt = 0f;
+
+        while (true)
+        {
+            walkOffset += Time.deltaTime;
+
+            float targetBounce = Mathf.Sin(walkOffset * walkBounceSpeed) * walkBounceHeight;
+            float targetTilt = Mathf.Cos(walkOffset * walkTiltSpeed) * walkTiltAngle;
+
+            currentBounce = Mathf.Lerp(currentBounce, targetBounce, Time.deltaTime * 5f);
+            currentTilt = Mathf.Lerp(currentTilt, targetTilt, Time.deltaTime * 5f);
+
+            Quaternion targetRotation = Quaternion.Euler(currentBounce, 0, currentTilt);
+            neckBone.localRotation = Quaternion.Slerp(neckBone.localRotation, targetRotation, Time.deltaTime * 5f);
+
+            yield return null;
+        }
     }
 }

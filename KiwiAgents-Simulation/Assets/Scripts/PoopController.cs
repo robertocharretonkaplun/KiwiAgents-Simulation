@@ -66,8 +66,9 @@ public class PoopController : MonoBehaviour
         input.Enable();
     }
 
-    void 
-    OnDisable() {
-        input.Disable();
+    void OnDisable()
+    {
+        if (input != null)
+            input.Disable();
     }
 }

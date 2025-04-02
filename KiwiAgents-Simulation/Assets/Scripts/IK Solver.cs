@@ -42,26 +42,28 @@ public class IKSolver : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        // No hacer nada si el personaje está quieto
+        // Actualiza la posición y orientación del pie
+        transform.position = currentPosition;
+        transform.up = currentNormal;
+
+        // Calcula el movimiento del cuerpo desde el último frame
+        Vector3 bodyMovement = body.position - lastBodyPosition;
+        lastBodyPosition = body.position;
+
+        // ✅ Nueva validación: solo considerar pasos si el personaje se está moviendo de verdad
         if (Controller.instance != null && !Controller.instance.isMoving)
         {
             return;
         }
 
-        transform.position = currentPosition;
-        transform.up = currentNormal;
-
-        Vector3 bodyMovement = body.position - lastBodyPosition;
-        lastBodyPosition = body.position;
-
-            // Lanzar un raycast desde la posición del cuerpo hacia abajo para detectar el terreno
-            Ray ray = new Ray(body.position + (body.right * footSpacing), Vector3.down);
+        // Lanzar un raycast desde la posición del cuerpo hacia abajo para detectar el terreno
+        Ray ray = new Ray(body.position + (body.right * footSpacing), Vector3.down);
         if (Physics.Raycast(ray, out RaycastHit info, raycastDistance, terrainLayer.value))
         {
             float footDistance = Vector3.Distance(currentPosition, info.point);
 
-            // Si el pie está demasiado lejos y el otro pie no se está moviendo, iniciar un paso
-            if ((footDistance > stepDistance || bodyMovement.magnitude > 0.01f) && 
+            // Si el pie está demasiado lejos o el cuerpo se movió lo suficiente, y el otro pie está quieto, iniciar un paso
+            if ((footDistance > stepDistance || bodyMovement.sqrMagnitude > 0.001f) &&
                 !otherFoot.IsMoving() && lerp >= 1f)
             {
                 lerp = 0f;
@@ -69,8 +71,8 @@ public class IKSolver : MonoBehaviour
                 float dynamicStepLength = stepLength + bodyMovement.magnitude * 1.5f;
 
                 // Calcular nueva posición del pie
-                Vector3 tentativeNewPosition = info.point + footOffset + 
-                        (body.forward * dynamicStepLength) + (body.right * footSpacing);
+                Vector3 tentativeNewPosition = info.point + footOffset +
+                    (body.forward * dynamicStepLength) + (body.right * footSpacing);
 
                 // Verificar que los pies no estén demasiado separados
                 float forwardDistance = Mathf.Abs(tentativeNewPosition.z - otherFoot.currentPosition.z);
@@ -84,6 +86,7 @@ public class IKSolver : MonoBehaviour
 
                 newPosition = tentativeNewPosition;
                 newNormal = info.normal;
+
                 Debug.Log($"Nuevo paso en: {newPosition}");
             }
         }

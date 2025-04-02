@@ -2964,6 +2964,10 @@ PrefabInstance:
       propertyPath: 'm_Transforms.Array.data[28]'
       value: 
       objectReference: {fileID: 505853575}
+    - target: {fileID: 2707294736490079167, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3593727058820848743, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
       propertyPath: m_Name
       value: Kiwi LowPoly New
@@ -2989,6 +2993,14 @@ PrefabInstance:
       value: 1.1
       objectReference: {fileID: 0}
     - target: {fileID: 9122530828213374217, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: idleRelaxDelay
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 9122530828213374217, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: idleBounceSpeed
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 9122530828213374217, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
       propertyPath: playerTransform
       value: 
       objectReference: {fileID: 107478162}
@@ -2997,12 +3009,28 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 9122530828213374217, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: idleBounceHeight
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 9122530828213374217, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
       propertyPath: walkBounceHeight
       value: 5.5
       objectReference: {fileID: 0}
     - target: {fileID: 9122530828213374217, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
       propertyPath: idleRotationSpeed
       value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 9122530828213374217, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: relaxedAngleFactor
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 9122530828213374217, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: relaxedSpeedFactor
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 9122530828213374217, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: relaxedBounceFactor
+      value: 0.4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
