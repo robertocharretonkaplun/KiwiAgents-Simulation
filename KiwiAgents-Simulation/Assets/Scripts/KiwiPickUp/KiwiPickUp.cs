@@ -4,20 +4,16 @@ using TMPro;
 public class KiwiFoodPickUp : MonoBehaviour
 {
     [Header("Configuración de recolección")]
-    public Collider pickUpTrigger; // Referencia al Collider de recolección
-    public Transform wormHoldPosition; // Posición donde se mostrará el gusano al recogerlo
-    public Vector3 wormRotation; // Rotación ajustable desde el inspector
+    public Collider pickUpTrigger; // Collider que define el área de recolección
+    public Transform wormHoldPosition; // Lugar donde se mostrará el gusano
 
     [Header("UI")]
     public TextMeshProUGUI pickupText; // UI para mostrar el contador
 
     private GameObject objectToPickUp; // Gusano disponible para recoger
     private GameObject heldWorm; // Gusano actualmente sostenido
-
-    private void Start()
-    {
-        UpdateUI();
-    }
+    private Rigidbody heldWormRb; // Referencia al Rigidbody del gusano
+    private WormPatrol wormPatrolScript; // Referencia al script de patrulla
 
     private void OnTriggerEnter(Collider other)
     {
@@ -41,8 +37,7 @@ public class KiwiFoodPickUp : MonoBehaviour
         {
             PickUpItem();
         }
-
-        if (heldWorm != null && Input.GetKeyDown(KeyCode.Q)) // "Q" para soltar
+        else if (heldWorm != null && Input.GetKeyDown(KeyCode.Q)) // "Q" para soltar
         {
             DropItem();
         }
@@ -51,21 +46,46 @@ public class KiwiFoodPickUp : MonoBehaviour
     private void PickUpItem()
     {
         heldWorm = objectToPickUp;
-        heldWorm.SetActive(false); // Oculta el objeto en la escena
-        heldWorm.transform.SetParent(wormHoldPosition); 
-        heldWorm.transform.localPosition = Vector3.zero; 
-        heldWorm.transform.localRotation = Quaternion.Euler(wormRotation); // Aplica la rotación desde el Inspector
-        heldWorm.SetActive(true); 
+        heldWormRb = heldWorm.GetComponent<Rigidbody>(); // Obtiene el Rigidbody
+        wormPatrolScript = heldWorm.GetComponent<WormPatrol>(); // Obtiene el script de patrulla
+
+        if (heldWormRb != null)
+        {
+            heldWormRb.isKinematic = true; // Desactiva las físicas para que no se mueva
+            heldWormRb.useGravity = false;
+        }
+
+        if (wormPatrolScript != null)
+        {
+            wormPatrolScript.enabled = false; // Desactiva la patrulla
+        }
+
+        heldWorm.transform.SetParent(wormHoldPosition);
+        heldWorm.transform.localPosition = Vector3.zero;
+        heldWorm.SetActive(true);
         objectToPickUp = null;
         UpdateUI();
     }
 
     private void DropItem()
     {
-        heldWorm.transform.SetParent(null); 
+        heldWorm.transform.SetParent(null);
         heldWorm.transform.position = transform.position + transform.forward * 2; // Lo coloca enfrente
-        heldWorm.SetActive(true);
+
+        if (heldWormRb != null)
+        {
+            heldWormRb.isKinematic = false; // Reactiva las físicas
+            heldWormRb.useGravity = true;
+        }
+
+        if (wormPatrolScript != null)
+        {
+            wormPatrolScript.enabled = true; // Reactiva la patrulla
+        }
+
         heldWorm = null;
+        heldWormRb = null;
+        wormPatrolScript = null;
         UpdateUI();
     }
 
