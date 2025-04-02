@@ -18,7 +18,11 @@ public class Controller : MonoBehaviour
 
     [Header("Render Objects")]
     public Material[] targetMaterial;
+    public Material fullScreenMaterial;
     public string propertyName = "_Alpha"; // Nombre de la propiedad del shader
+    public float VHSShaderTime = 5.0f; // Tiempo de transición del shader VHS
+    public float vignettePower;
+    public float vignetteIntensity;
 
 
     private Vector3 targetPosition;
@@ -50,6 +54,10 @@ public class Controller : MonoBehaviour
         {
             material.SetFloat("_Alpha", 0.0f); // Cambia el valor de la propiedad
         }
+
+        // Inicializa la propiedad del material de pantalla completa
+        fullScreenMaterial.SetFloat("_VignettePower", 0.0f);
+        fullScreenMaterial.SetFloat("_VignetteIntensity", 0.0f);
 
     }
 
@@ -94,8 +102,12 @@ public class Controller : MonoBehaviour
                 material.SetFloat("_Alpha", 1.0f); // Cambia el valor de la propiedad
             }
 
+            // Cambia la propiedad del material de pantalla completa
+            fullScreenMaterial.SetFloat("_VignettePower", vignettePower);
+            fullScreenMaterial.SetFloat("_VignetteIntensity", vignetteIntensity);
 
-            Invoke("ResetMaterialProperty", 5.0f); // Resetea la propiedad después de 1 segundo
+
+            Invoke("ResetMaterialProperty", VHSShaderTime); // Resetea la propiedad después de 1 segundo
     }
 
     /// <summary>
@@ -110,6 +122,10 @@ public class Controller : MonoBehaviour
             {
                 material.SetFloat("_Alpha", 0.0f); // Cambia el valor de la propiedad
             }
+
+            // Resetea la propiedad del material de pantalla completa
+            fullScreenMaterial.SetFloat("_VignettePower", 0.0f);
+            fullScreenMaterial.SetFloat("_VignetteIntensity", 0.0f);
     }
 
 
