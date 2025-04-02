@@ -9,6 +9,8 @@ public class CamSwitchNZoom : MonoBehaviour
     public CinemachineCamera followCam; 
     public CinemachineCamera freeCam;
 
+    
+
     [Header("Zoom")]
     [SerializeField] private float minZoom;
     [SerializeField] private float maxZoom;
