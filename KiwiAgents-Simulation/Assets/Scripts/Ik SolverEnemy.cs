@@ -77,7 +77,7 @@ public class IkSolverEnemy : MonoBehaviour
 
                 newPos = tentativeNewPosition;
                 newNormal = info.normal;
-                Debug.Log($"Nuevo paso en: {newPos}");
+                //Debug.Log($"Nuevo paso en: {newPos}");
             }
         }
 

@@ -87,7 +87,7 @@ public class IKSolver : MonoBehaviour
                 newPosition = tentativeNewPosition;
                 newNormal = info.normal;
 
-                Debug.Log($"Nuevo paso en: {newPosition}");
+                // Debug.Log($"Nuevo paso en: {newPosition}");
             }
         }
 

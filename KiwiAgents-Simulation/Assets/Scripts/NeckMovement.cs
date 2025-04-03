@@ -27,6 +27,7 @@ public class NeckMovement : MonoBehaviour
     public float movementThreshold = 0.01f;
 
     [Header("Relax Settings")]
+    public float relaxT = 0;
     public float idleRelaxDelay = 5f;
     public float relaxedSpeedFactor = 0.2f;
     public float relaxedAngleFactor = 0.3f;
@@ -37,15 +38,16 @@ public class NeckMovement : MonoBehaviour
     private Vector3 lastPosition;
 
     private float idleAngle = 0f;
-    private bool movingRight = true;
     private float walkOffset = 0f;
     private float timeStill = 0f;
     private float bounceTimer = 0f;
+    private bool movingRight = true;
+    private bool isIdle = true;
 
     void Start()
     {
         lastPosition = playerTransform.position;
-        currentRoutine = StartCoroutine(IdleRoutine());
+        //currentRoutine = StartCoroutine(IdleRoutine());
 
         // Aplicar rotación inicial para que se vea el bounce desde el inicio
         float initBounceX = Mathf.Sin(0f) * idleBounceHeight;
@@ -60,16 +62,22 @@ public class NeckMovement : MonoBehaviour
         isMoving = (playerTransform.position - lastPosition).sqrMagnitude > movementThreshold;
         lastPosition = playerTransform.position;
 
-        if (isMoving && currentRoutine != null)
+        if (isMoving && isIdle)
         {
-            StopCoroutine(currentRoutine);
+            isIdle = false;
             ResetIdleState();
+
+            if (currentRoutine != null)
+            {
+                StopCoroutine(currentRoutine);
+            }
             currentRoutine = StartCoroutine(WalkRoutine());
         }
-        else if (!isMoving && currentRoutine != null && currentRoutine.ToString() != "IdleRoutine")
+        else if (!isMoving && !isIdle)
         {
+            isIdle = true;
+            timeStill = 0f;
             StopCoroutine(currentRoutine);
-            currentRoutine = StartCoroutine(IdleRoutine());
         }
 
         jawBone.localRotation = neckBone.localRotation;
@@ -83,16 +91,14 @@ public class NeckMovement : MonoBehaviour
         bounceTimer = 0f;
     }
 
-    IEnumerator IdleRoutine()
+    void FixedUpdate()
     {
-        bounceTimer = 0f;
-
-        while (true)
+        if (isIdle)
         {
             timeStill += Time.deltaTime;
             bounceTimer += Time.deltaTime * idleBounceSpeed;
 
-            float relaxT = Mathf.Clamp01((timeStill - idleRelaxDelay) / 3f);
+            relaxT = Mathf.Clamp01((timeStill - idleRelaxDelay) / 3f);
             float currentSpeed = Mathf.Lerp(idleRotationSpeed, idleRotationSpeed * relaxedSpeedFactor, relaxT);
             float currentAngle = Mathf.Lerp(idleRotationAngle, idleRotationAngle * relaxedAngleFactor, relaxT);
             float bounceFactor = Mathf.Lerp(1f, relaxedBounceFactor, relaxT);
@@ -105,8 +111,6 @@ public class NeckMovement : MonoBehaviour
 
             Quaternion targetRotation = Quaternion.Euler(bounceX, idleAngle, 0);
             neckBone.localRotation = Quaternion.Slerp(neckBone.localRotation, targetRotation, Time.deltaTime * 5f);
-
-            yield return null;
         }
     }
 
