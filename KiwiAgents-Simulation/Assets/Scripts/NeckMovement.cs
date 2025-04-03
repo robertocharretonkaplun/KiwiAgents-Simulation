@@ -14,24 +14,24 @@ public class NeckMovement : MonoBehaviour
     public Transform playerTransform;
 
     [Header("Idle Settings")]
-    public float idleRotationSpeed = 15f;
-    public float idleRotationAngle = 30f;
-    public float idleBounceHeight = 10f;
-    public float idleBounceSpeed = 2.5f;
+    public float idleRotationSpeed = 15f; // Velocidad de rotacion lateral del idle
+    public float idleRotationAngle = 30f; // Velocidad de rotacion lateral del idle
+    public float idleBounceHeight = 10f; //¨Altura del rebote para simular la respiracion
+    public float idleBounceSpeed = 2.5f; // Velocidad del rebote que simula la respiracion
 
     [Header("Walk Settings")]
-    public float walkBounceSpeed = 3f;
-    public float walkBounceHeight = 6f;
-    public float walkTiltSpeed = 1.5f;
-    public float walkTiltAngle = 4f;
-    public float movementThreshold = 0.01f;
+    public float walkBounceSpeed = 3f; // Velocidad del rebote al caminar
+    public float walkBounceHeight = 6f; // Altura del rebote al caminar
+    public float walkTiltSpeed = 1.5f; // Velocidad de inclinacion del cuello al caminar
+    public float walkTiltAngle = 4f; //¨Angulo de inclinacion del cuello al caminar
+    public float movementThreshold = 0.01f; // Límite para detectar el movimiento
 
     [Header("Relax Settings")]
-    public float relaxT = 0;
-    public float idleRelaxDelay = 5f;
-    public float relaxedSpeedFactor = 0.2f;
-    public float relaxedAngleFactor = 0.3f;
-    public float relaxedBounceFactor = 0.3f;
+    public float relaxT = 0; // Valor del estado de calma (de 0 a 1)
+    public float idleRelaxDelay = 5f; // Tiempo antes de que idle comience a calmarse
+    public float relaxedSpeedFactor = 0.2f; // Reduccion de velocidad al estar calmado
+    public float relaxedAngleFactor = 0.3f; // Reduccion del angulo al estar calmado
+    public float relaxedBounceFactor = 0.3f; // Reduccion del rebote al estar calmado
 
     private Coroutine currentRoutine;
     private bool isMoving;
@@ -44,6 +44,9 @@ public class NeckMovement : MonoBehaviour
     private bool movingRight = true;
     private bool isIdle = true;
 
+    /// <summary>
+    /// Inicializamos la ultima posicion como la posicón del jugador y se aplica una rotación inicial de rebote.
+    /// </summary>
     void Start()
     {
         lastPosition = playerTransform.position;
@@ -55,6 +58,11 @@ public class NeckMovement : MonoBehaviour
         neckBone.localRotation = initRotation;
     }
 
+    /// <summary>
+    /// Como su nombre lo dice, este método se ejecuta luego de Update y lo usamos para 
+    /// asegurar que todas las transformaciones anteriores se hayan aplicado. 
+    /// Además, detecta si el jugador se movio y gestiona la transicion entre idle y caminata.
+    /// </summary>
     void LateUpdate()
     {
         if (neckBone == null || jawBone == null || playerTransform == null) return;
@@ -83,6 +91,9 @@ public class NeckMovement : MonoBehaviour
         jawBone.localRotation = neckBone.localRotation;
     }
 
+    /// <summary>
+    /// Restablecemos los parámetros del movimiento en idle al cambiar de caminata a idle.
+    /// </summary>
     void ResetIdleState()
     {
         idleAngle = 0f;
@@ -91,6 +102,13 @@ public class NeckMovement : MonoBehaviour
         bounceTimer = 0f;
     }
 
+    /// <summary>
+    /// A diferencia de Update, FixedUpdate se ejecuta en intervalos fijos, por lo que la
+    /// actualización de sus elementos no depende de la tasa de actualización de cada dispositivo,
+    /// evitando problemas donde funcione bien en algunas laptops y no en otras.
+    /// Manejar el movimiento en idle con mayor precisión, controla el balanceo y rebote 
+    /// cuando el kiwi anda inactivo, y se encarga de que aumente su relajación.
+    /// </summary>
     void FixedUpdate()
     {
         if (isIdle)
@@ -114,6 +132,10 @@ public class NeckMovement : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Esta corrutina maneja el movimiento procedural del cuello durante la caminata.
+    /// Se genera un rebote y una inclinación lateral suave usando interpolación (lerp).
+    /// </summary>
     IEnumerator WalkRoutine()
     {
         walkOffset = 0f;
