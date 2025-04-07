@@ -19,9 +19,11 @@ public class KiwiTropas : MonoBehaviour
     public float detectionRadius = 3f;  // Radio para detectar al jugador
     private bool isPlayerNear = false;
     public GameObject interactionUI;  //canvas
-
+    private PlayerInventory playerInventory;
     [Header("Feedback")]
-  //  public AudioSource interactionSound;
+    public GameObject indicadorNeutral;
+    public GameObject indicadorAliado;
+    //  public AudioSource interactionSound;
 
 
     private Vector3 wanderTarget;
@@ -29,8 +31,13 @@ public class KiwiTropas : MonoBehaviour
 
     void Start()
     {
+        indicadorAliado.SetActive(false);
+        indicadorNeutral.SetActive(true);
         wanderTarget = transform.position;
         wanderTimer = waitTime;
+
+        if (player != null)
+            playerInventory = player.GetComponent<PlayerInventory>();
     }
 
     void Update()
@@ -48,7 +55,7 @@ public class KiwiTropas : MonoBehaviour
                 // Espera la interacción
                 if (Input.GetKeyDown(KeyCode.E))
                 {
-                    ConvertirseEnAliado();
+                    TryConvertToAlly();
                 }
                 // No se mueve si el jugador está cerca
                 return;
@@ -105,15 +112,23 @@ public class KiwiTropas : MonoBehaviour
             interactionUI.SetActive(isPlayerNear && !isAlly);
         }
     }
-    void ConvertirseEnAliado()
+    void TryConvertToAlly()
     {
-        isAlly = true;
-        if (interactionUI != null)
-            interactionUI.SetActive(false);
+        if (isAlly || playerInventory == null) return;
 
-        //  if (interactionSound != null)
-        //    interactionSound.Play();
-
-        Debug.Log($"{gameObject.name} se ha convertido en aliado.");
+        if (playerInventory.UseSeed())
+        {
+            isAlly = true;
+            if (interactionUI != null) interactionUI.SetActive(false);
+         //   if (interactionSound != null) interactionSound.Play();
+            Debug.Log($"{gameObject.name} se ha convertido en aliado.");
+            indicadorNeutral.SetActive(false);
+            indicadorAliado.SetActive(true);
+        }
+        else
+        {
+            Debug.Log("Necesitas una semilla para convertirlo en aliado.");
+            // Aquí podrías mostrar un mensaje visual si quieres
+        }
     }
 }
