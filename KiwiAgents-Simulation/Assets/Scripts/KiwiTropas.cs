@@ -3,17 +3,26 @@ using UnityEngine;
 public class KiwiTropas : MonoBehaviour
 {
     [Header("Configuración general")]
-    public bool isAlly = false;            // Si es aliado, sigue al jugador
-    public Transform player;               // Referencia al jugador
+    public bool isAlly = false;
+    public Transform player;
 
-    [Header("Movimiento de seguimiento")]
+    [Header("Follow Player")]
     public float followSpeed = 5f;
     public float stoppingDistance = 2f;
 
-    [Header("Movimiento aleatorio (enemigo)")]
+    [Header("Wander Random")]
     public float wanderRadius = 10f;
     public float wanderSpeed = 3f;
     public float waitTime = 3f;
+
+    [Header("Interacción")]
+    public float detectionRadius = 3f;  // Radio para detectar al jugador
+    private bool isPlayerNear = false;
+    public GameObject interactionUI;  //canvas
+
+    [Header("Feedback")]
+  //  public AudioSource interactionSound;
+
 
     private Vector3 wanderTarget;
     private float wanderTimer;
@@ -32,6 +41,19 @@ public class KiwiTropas : MonoBehaviour
         }
         else
         {
+            DetectPlayer();
+
+            if (isPlayerNear)
+            {
+                // Espera la interacción
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    ConvertirseEnAliado();
+                }
+                // No se mueve si el jugador está cerca
+                return;
+            }
+
             WanderRandomly();
         }
     }
@@ -56,7 +78,6 @@ public class KiwiTropas : MonoBehaviour
 
         if (wanderTimer >= waitTime || Vector3.Distance(transform.position, wanderTarget) < 1f)
         {
-            // Elige una nueva posición aleatoria dentro del radio
             Vector2 randomCircle = Random.insideUnitCircle * wanderRadius;
             wanderTarget = new Vector3(randomCircle.x, transform.position.y, randomCircle.y) + transform.position;
             wanderTimer = 0;
@@ -65,5 +86,34 @@ public class KiwiTropas : MonoBehaviour
         Vector3 direction = (wanderTarget - transform.position).normalized;
         transform.position += direction * wanderSpeed * Time.deltaTime;
         transform.LookAt(new Vector3(wanderTarget.x, transform.position.y, wanderTarget.z));
+    }
+
+    void DetectPlayer()
+    {
+        if (player == null)
+        {
+            isPlayerNear = false;
+            if (interactionUI != null) interactionUI.SetActive(false);
+            return;
+        }
+
+        float distance = Vector3.Distance(transform.position, player.position);
+        isPlayerNear = distance <= detectionRadius;
+
+        if (interactionUI != null)
+        {
+            interactionUI.SetActive(isPlayerNear && !isAlly);
+        }
+    }
+    void ConvertirseEnAliado()
+    {
+        isAlly = true;
+        if (interactionUI != null)
+            interactionUI.SetActive(false);
+
+        //  if (interactionSound != null)
+        //    interactionSound.Play();
+
+        Debug.Log($"{gameObject.name} se ha convertido en aliado.");
     }
 }
