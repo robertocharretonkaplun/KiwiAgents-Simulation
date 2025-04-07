@@ -1,10 +1,16 @@
-public class RevealedState : EnemyState
+﻿public class RevealedState : EnemyState
 {
-    public RevealedState(EnemyStateMachine enemyStateMachine) : base(enemyStateMachine) {}
+    private bool yaRevelado = false;
+
+    public RevealedState(EnemyStateMachine enemyStateMachine) : base(enemyStateMachine) { }
 
     public override void Execute()
     {
-        
-        enemyStateMachine.RevealEnemy();
+        if (!yaRevelado)
+        {
+            //Debug.Log("🔔 Entrando a RevealedState");
+            enemyStateMachine.RevealEnemy();
+            yaRevelado = true;
+        }
     }
 }

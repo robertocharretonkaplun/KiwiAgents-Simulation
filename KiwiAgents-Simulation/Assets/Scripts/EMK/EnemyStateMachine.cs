@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class EnemyStateMachine : MonoBehaviour
 {
@@ -8,32 +8,59 @@ public class EnemyStateMachine : MonoBehaviour
     public EnemyState revealedState;
 
     public GameObject modeloEnemigo;
-    public GameObject exclamacionUI; 
+    public GameObject exclamacionUI;
     public Transform player;
+
+    [Header("Control de Escala y Visibilidad")]
+    public Vector3 escalaOriginal = new Vector3(40.64f, 40.64f, 40.64f); // ✅
+
+    [Header("Temporizador de Revelación")]
+    public float tiempoAntesDeRevelar = 10f;
+    public bool activarTemporizador = false;
+
+    [Header("Detección")]
+    public DetectionZone detectionZone;
     public float rangoVision = 10f;
     public float anguloVision = 60f;
-    public float tiempoAntesDeRevelar = 1.5f;
 
+    private float tiempoDetectando = 0f;
     private bool revelado = false;
 
     void Start()
     {
-        
         idleState = new IdleState(this);
         detectingState = new DetectingState(this);
         revealedState = new RevealedState(this);
 
-       
         currentState = idleState;
 
-        modeloEnemigo.SetActive(false);
+        if (modeloEnemigo != null)
+            modeloEnemigo.transform.localScale = Vector3.zero; // Inicia invisible
+
+        if (detectionZone != null)
+            detectionZone.enemyFSM = this;
+
+        HideExclamation();
     }
 
     void Update()
     {
         if (currentState != null)
-        {
             currentState.Execute();
+
+        if (activarTemporizador && !revelado)
+        {
+            tiempoDetectando += Time.deltaTime;
+            Debug.Log($"⏱️ Esperando para revelar: {tiempoDetectando}");
+
+            if (tiempoDetectando >= tiempoAntesDeRevelar)
+            {
+                Debug.Log("💥 Tiempo cumplido: revelando");
+                RevealEnemy();
+                ChangeState(revealedState);
+                activarTemporizador = false;
+                tiempoDetectando = 0f;
+            }
         }
     }
 
@@ -42,22 +69,26 @@ public class EnemyStateMachine : MonoBehaviour
         currentState = newState;
     }
 
-    
     public void RevealEnemy()
     {
         revelado = true;
-        modeloEnemigo.SetActive(true);
-        exclamacionUI.SetActive(false);
+        HideExclamation();
+
+        if (modeloEnemigo != null)
+        {
+            modeloEnemigo.transform.localScale = escalaOriginal;
+            Debug.Log($"📏 Escala restaurada a: {escalaOriginal}");
+        }
     }
 
     public void ShowExclamation()
     {
-        exclamacionUI.SetActive(true);
+        if (exclamacionUI != null) exclamacionUI.SetActive(true);
     }
 
     public void HideExclamation()
     {
-        exclamacionUI.SetActive(false);
+        if (exclamacionUI != null) exclamacionUI.SetActive(false);
     }
 
     public bool IsPlayerInSight()
@@ -76,12 +107,15 @@ public class EnemyStateMachine : MonoBehaviour
                 if (Physics.Raycast(transform.position + Vector3.up, dirJugador.normalized, out hit, rangoVision))
                 {
                     if (hit.collider.CompareTag("Player"))
-                    {
                         return true;
-                    }
                 }
             }
         }
         return false;
+    }
+
+    public bool IsRevealed()
+    {
+        return revelado;
     }
 }

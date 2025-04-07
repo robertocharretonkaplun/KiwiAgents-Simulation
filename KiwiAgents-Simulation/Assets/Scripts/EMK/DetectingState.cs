@@ -1,17 +1,39 @@
+﻿using UnityEngine;
 public class DetectingState : EnemyState
 {
-    public DetectingState(EnemyStateMachine enemyStateMachine) : base(enemyStateMachine) {}
+    private bool señalActivada = false;
+
+    public DetectingState(EnemyStateMachine enemyStateMachine) : base(enemyStateMachine) { }
 
     public override void Execute()
     {
-        
-        if (enemyStateMachine.IsPlayerInSight())
+        Debug.Log("DetectingState ejecutado");
+
+        if (enemyStateMachine.IsPlayerInSight() ||
+            (enemyStateMachine.detectionZone != null && enemyStateMachine.detectionZone.hasDetectPlayer))
         {
-            enemyStateMachine.ChangeState(enemyStateMachine.revealedState);
+            if (!enemyStateMachine.activarTemporizador)
+            {
+                enemyStateMachine.activarTemporizador = true;
+                Debug.Log("⏱️ Temporizador activado desde estado Detecting");
+            }
+
+            if (!señalActivada)
+            {
+                enemyStateMachine.ShowExclamation();
+                señalActivada = true;
+            }
         }
         else
         {
-            enemyStateMachine.ChangeState(enemyStateMachine.idleState);
+            // Solo volver a Idle si aún no fue revelado
+            if (!enemyStateMachine.IsRevealed())
+            {
+                enemyStateMachine.activarTemporizador = false;
+                enemyStateMachine.HideExclamation();
+                señalActivada = false;
+                enemyStateMachine.ChangeState(enemyStateMachine.idleState);
+            }
         }
     }
 }

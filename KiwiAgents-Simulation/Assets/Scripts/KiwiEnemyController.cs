@@ -3,78 +3,85 @@ using UnityEngine.AI;
 
 public class KiwiEnemyController : MonoBehaviour
 {
-  public Transform ObjectFollow; // Referencia al jugador
-  private NavMeshAgent agent; // Referencia al NavMeshAgent
-  [SerializeField] public float stopDistance = 1.0f; // Distancia mínima para detenerse
-  private bool avoidPoop = false;
-  public DetectionZone detectionZone;
-  void
-  Start()
-  {
-    agent = GetComponent<NavMeshAgent>();
+    public Transform ObjectFollow; // Referencia al jugador
+    private NavMeshAgent agent; // Referencia al NavMeshAgent
+    [SerializeField] public float stopDistance = 1.0f; // Distancia mínima para detenerse
+    private bool avoidPoop = false;
 
-    agent.stoppingDistance = stopDistance;
-    PoopController.OnPoopStatusChanged += HandlePoopStatus;
-  }
+    public DetectionZone detectionZone;
+    public EnemyStateMachine enemyStateMachine; // MODIFICADO: acceso a la FSM
 
-  void
-  Update()
-  {
-    if (detectionZone.hasDetectPlayer)
+    void Start()
     {
-      ObjectFollow = detectionZone.detectPlayerRef.transform;
-    }
-    else
-    {
-      ObjectFollow = null;
+        agent = GetComponent<NavMeshAgent>();
+        agent.stoppingDistance = stopDistance;
+
+        PoopController.OnPoopStatusChanged += HandlePoopStatus;
     }
 
-    if (avoidPoop)
+    void Update()
     {
-      MoveAwayFromPoop();
+        // MODIFICADO: Solo asigna objetivo si el enemigo está revelado
+        if (enemyStateMachine != null && enemyStateMachine.IsRevealed())
+        {
+            if (detectionZone.hasDetectPlayer)
+            {
+                ObjectFollow = detectionZone.detectPlayerRef.transform;
+            }
+            else
+            {
+                ObjectFollow = null;
+            }
+        }
+        else
+        {
+            ObjectFollow = null; // Si no está revelado, no hace nada
+        }
+
+        if (avoidPoop)
+        {
+            MoveAwayFromPoop();
+        }
+        else
+        {
+            MoveTowardsPlayer();
+        }
     }
-    else
+
+    void MoveTowardsPlayer()
     {
-      MoveTowardsPlayer();
-    }
-  }
+        if (ObjectFollow)
+        {
+            float distanceToPlayer = Vector3.Distance(transform.position, ObjectFollow.position);
 
-  void MoveTowardsPlayer()
-  {
-    if (ObjectFollow)
+            if (distanceToPlayer > stopDistance)
+            {
+                agent.SetDestination(ObjectFollow.position);
+            }
+            else
+            {
+                agent.ResetPath();
+            }
+        }
+    }
+
+    void MoveAwayFromPoop()
     {
-      float distanceToPlayer = Vector3.Distance(transform.position, ObjectFollow.position);
-
-      if (distanceToPlayer > stopDistance)
-      {
-        agent.SetDestination(ObjectFollow.position);
-      }
-      else
-      {
-        agent.ResetPath();
-      }
+        if (ObjectFollow)
+        {
+            Vector3 direction = (transform.position - ObjectFollow.position).normalized;
+            Vector3 newPos = transform.position + direction * 3f; // Distancia de alejamiento
+            agent.SetDestination(newPos);
+        }
     }
-  }
 
-  void MoveAwayFromPoop()
-  {
-    if (ObjectFollow)
+    void HandlePoopStatus(bool hasPoop)
     {
-      Vector3 direction = (transform.position - ObjectFollow.position).normalized;
-      Vector3 newPos = transform.position + direction * 3f; // Distancia de alejamiento
-      agent.SetDestination(newPos);
+        avoidPoop = hasPoop;
     }
-  }
 
-  void HandlePoopStatus(bool hasPoop)
-  {
-    avoidPoop = hasPoop;
-  }
-
-  void OnDestroy()
-  {
-    PoopController.OnPoopStatusChanged -= HandlePoopStatus;
-  }
-
-
+    void OnDestroy()
+    {
+        PoopController.OnPoopStatusChanged -= HandlePoopStatus;
+    }
 }
