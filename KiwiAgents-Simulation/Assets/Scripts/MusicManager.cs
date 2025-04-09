@@ -4,90 +4,99 @@ using System.Collections;
 public 
 class 
 MusicManager : MonoBehaviour{
-    // Singleton
+        // Singleton
     public static MusicManager Instance { get; private set; }
 
-    [Header("ConfiguraciÛn de M˙sica")]
+    [Header("Configuraci√≥n de M√∫sica")]
     public AudioClip[] songs;  // Array de canciones a asignar desde el Inspector
 
-    [Header("Par·metros de Probabilidad")]
-    [SerializeField] private float ProbabilidadReproducir = 0.5f;        // Probabilidad para iniciar una canciÛn cuando no se est· reproduciendo
-    [SerializeField] private float ProbabilidadEnReproduccion = 0.7f;    // Probabilidad para controlar la canciÛn en reproducciÛn
-    [SerializeField] private float ProbabilidadDePausa = 0.5f;           // Probabilidad de pausar en lugar de detener cuando se controla la canciÛn
+    [Header("Par√°metros de Probabilidad")]
+    [SerializeField] private float ProbabilidadReproducir = 0.5f;        // Probabilidad para iniciar una canci√≥n cuando no se est√© reproduciendo
+    [SerializeField] private float ProbabilidadEnReproduccion = 0.7f;    // Probabilidad para controlar la canci√≥n en reproducci√≥n
+    [SerializeField] private float ProbabilidadDePausa = 0.5f;           // Probabilidad de pausar en lugar de detener cuando se controla la canci√≥n
 
     [Header("Intervalos de Tiempo")]
-    [SerializeField] private float TiempoMinEspera = 5f;  // Tiempo mÌnimo de espera entre canciones
-    [SerializeField] private float TiempoMaxEspera = 15f; // Tiempo m·ximo de espera entre canciones    
+    [SerializeField] private float TiempoMinEspera = 5f;  // Tiempo m√≠nimo de espera entre canciones
+    [SerializeField] private float TiempoMaxEspera = 15f; // Tiempo m√°ximo de espera entre canciones    
 
     private AudioSource audioSource;
 
-    private 
-    void 
-    Awake(){
-        // ImplementaciÛn del Singleton
-        if (Instance == null){
+    private void Awake()
+    {
+        // Implementaci√≥n del Singleton
+        if (Instance == null)
+        {
             Instance = this;
             DontDestroyOnLoad(gameObject); // Persiste entre escenas
         }
-        else{
+        else
+        {
             Destroy(gameObject);
             return;
         }
     }
 
-    void 
-    Start(){
+    void Start()
+    {
         // Obtener el componente AudioSource y comprobar que existe.
         audioSource = GetComponent<AudioSource>();
-        if (audioSource == null){
-            Debug.LogError("No se encontrÛ AudioSource en el GameObject");
+        if (audioSource == null)
+        {
+            Debug.LogError("No se encontr√≥ AudioSource en el GameObject");
             return;
         }
 
-        // Iniciar la corutina para gestionar la m˙sica de forma aleatoria.
-        StartCoroutine(RandomMusicRoutine());
+        // Iniciar la repetici√≥n peri√≥dica del m√©todo RandomMusicRoutine con un tiempo aleatorio entre las canciones.
+        InvokeRepeating("RandomMusicRoutine", 0f, Random.Range(TiempoMinEspera, TiempoMaxEspera));
     }
 
-    IEnumerator 
-    RandomMusicRoutine(){
-        while (true){
-            // Verifica que el array de canciones estÈ asignado y contenga elementos.
-            if (songs == null || songs.Length == 0) {
-                // Si no hay canciones asignadas, muestra un mensaje de advertencia.
-                Debug.LogWarning("No hay canciones asignadas en MusicManager");
-                // Espera un intervalo aleatorio entre TiempoMinEspera y TiempoMaxEspera antes de la siguiente comprobaciÛn.
-                yield return new WaitForSeconds(Random.Range(TiempoMinEspera, TiempoMaxEspera));
-                // Contin˙a al siguiente ciclo de la corutina.
-                continue;
-            }
-            // Comprueba si el AudioSource no est· reproduciendo ninguna canciÛn.
-            if (!audioSource.isPlaying){
-                // Con la probabilidad definida, decide si iniciar una nueva canciÛn.
-                if (Random.value > ProbabilidadReproducir){
-                    // Selecciona una canciÛn aleatoria del array y la reproduce.
-                    int index = Random.Range(0, songs.Length);
-                    // Asigna la canciÛn seleccionada al AudioSource y la reproduce.
-                    audioSource.clip = songs[index];
-                    // Reproduce la canciÛn.
-                    audioSource.Play();
-                }
-            }
-            else{
-                // Si ya se est· reproduciendo, con la probabilidad definida, decide pausar o detener la canciÛn.
-                if (Random.value > ProbabilidadEnReproduccion){
-                    // Con la probabilidad definida, decide si pausar o detener la canciÛn.
-                    if (Random.value > ProbabilidadDePausa){
-                        // Pausa la canciÛn para reanudarla m·s tarde.
-                        audioSource.Pause();
-                    }
-                    else{
-                        // Detiene la canciÛn, reiniciando su reproducciÛn en la siguiente ejecuciÛn.
-                        audioSource.Stop();
-                    }
-                }
-            }
-            // Espera un intervalo aleatorio entre TiempoMinEspera y TiempoMaxEspera antes de la siguiente comprobaciÛn.
-            yield return new WaitForSeconds(Random.Range(TiempoMinEspera, TiempoMaxEspera));
+    void RandomMusicRoutine()
+    {
+        // Verifica que el array de canciones est√© asignado y contenga elementos.
+        if (songs == null || songs.Length == 0)
+        {
+            // Si no hay canciones asignadas, muestra un mensaje de advertencia.
+            Debug.LogWarning("No hay canciones asignadas en MusicManager");
+            // Finaliza la ejecuci√≥n actual y vuelve a invocar el m√©todo con el siguiente intervalo.
+            return;
         }
+
+        // Comprueba si el AudioSource no est√° reproduciendo ninguna canci√≥n.
+        if (!audioSource.isPlaying)
+        {
+            // Con la probabilidad definida, decide si iniciar una nueva canci√≥n.
+            if (Random.value > ProbabilidadReproducir)
+            {
+                // Selecciona una canci√≥n aleatoria del array y la reproduce.
+                int index = Random.Range(0, songs.Length);
+                // Asigna la canci√≥n seleccionada al AudioSource y la reproduce.
+                audioSource.clip = songs[index];
+                // Reproduce la canci√≥n.
+                audioSource.Play();
+            }
+        }
+        else
+        {
+            // Si ya se est√° reproduciendo, con la probabilidad definida, decide pausar o detener la canci√≥n.
+            if (Random.value > ProbabilidadEnReproduccion)
+            {
+                // Con la probabilidad definida, decide si pausar o detener la canci√≥n.
+                if (Random.value > ProbabilidadDePausa)
+                {
+                    // Pausa la canci√≥n para reanudarla m√°s tarde.
+                    audioSource.Pause();
+                }
+                else
+                {
+                    // Detiene la canci√≥n, reiniciando su reproducci√≥n en la siguiente ejecuci√≥n.
+                    audioSource.Stop();
+                }
+            }
+        }
+
+        // Establece el siguiente intervalo de espera entre canciones.
+        CancelInvoke("RandomMusicRoutine"); // Cancelar la llamada previa
+        InvokeRepeating("RandomMusicRoutine", Random.Range(TiempoMinEspera, TiempoMaxEspera), Random.Range(TiempoMinEspera, TiempoMaxEspera));
     }
+
 }
