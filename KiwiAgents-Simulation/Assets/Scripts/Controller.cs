@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Controller : MonoBehaviour
 {
-    public static Controller instance;
+   public static Controller instance;
 
     [Header("Agente")]
     CustomAccion input;
@@ -11,27 +11,57 @@ public class Controller : MonoBehaviour
     [Header("Movement")]
     [SerializeField] ParticleSystem clickEffect;
     [SerializeField] LayerMask clickableLayer;
+    
+    [Tooltip("Fuerza del salto del Kiwi.")]
     public float jumpForce = 5f;
+
+    [Tooltip("Velocidad normal de movimiento del Kiwi.")]
     public float moveSpeed = 5f;
-    public float airControlFactor = 0.5f; // Control en el aire
+
+    [Tooltip("Factor de control cuando el Kiwi está en el aire.")]
+    public float airControlFactor = 0.5f;
+
     float lookRotationSpeed = 8f;
 
+    [Header("Sprint Settings")]
+    /// <summary>
+/// Velocidad máxima que el kiwi alcanzará cuando se detecte un doble clic.
+/// Por defecto es mayor que moveSpeed, simulando una "carrera".
+/// </summary>
+    [Tooltip("Velocidad máxima al hacer doble clic.")]
+    public float sprintSpeed = 10f;
+    /// <summary>
+/// Tiempo en segundos que durará el sprint una vez activado.
+/// Después de este tiempo, el kiwi regresará a su velocidad normal.
+/// </summary>
+
+    [Tooltip("Duración en segundos del sprint.")]
+    public float sprintDuration = 1.5f;
+
+    private float normalSpeed;
+    private float lastClickTime = 0f;
+    private float doubleClickThreshold = 0.3f;
+
     [Header("SFX")]
-    [SerializeField] private float footstepInterval = 0.5f; 
+    [SerializeField] private float footstepInterval = 0.5f;
     private float footstepTimer = 0f;
 
     [Header("Render Objects")]
     public Material[] targetMaterial;
-    public string propertyName = "_Alpha"; // Nombre de la propiedad del shader
+    public string propertyName = "_Alpha";
 
     private Vector3 targetPosition;
-    private Vector3 moveDirection; // Nueva variable para almacenar dirección de movimiento
+    private Vector3 moveDirection;
     public bool isMoving = false;
     private bool isGrounded;
     private Vector3 lastPosition;
+
+    [Tooltip("Distancia mínima para que se detecte movimiento y se activen sonidos.")]
     [SerializeField] private float movementDeltaLimit = 0.05f;
 
-
+    /// <summary>
+    /// Configura la instancia y los inputs.
+    /// </summary>
     private void Awake()
     {
         if (instance != null && instance != this)
@@ -44,64 +74,61 @@ public class Controller : MonoBehaviour
         input = new CustomAccion();
     }
 
+    /// <summary>
+    /// Inicializa variables, configura inputs y prepara los materiales.
+    /// </summary>
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        rb.freezeRotation = true; // Bloquea la rotación del Rigidbody
+        rb.freezeRotation = true;
         AssingInputs();
         targetPosition = transform.position;
         lastPosition = transform.position;
+        normalSpeed = moveSpeed;
 
         foreach (var material in targetMaterial)
         {
-            material.SetFloat("_Alpha", 0.0f); // Cambia el valor de la propiedad
+            material.SetFloat("_Alpha", 0.0f);
         }
-
     }
 
+    /// <summary>
+    /// Llama cada frame para ajustar la dirección visual del personaje.
+    /// </summary>
     private void Update()
     {
-        // Asegura que el personaje siempre mire hacia donde se mueve
         if (isMoving)
         {
             FaceTarget();
         }
     }
 
-    void OnEnable()
-    {
-        input.Enable();
-    }
+    void OnEnable() => input.Enable();
+    void OnDisable() => input.Disable();
 
-    void OnDisable()
+    /// <summary>
+    /// Cambia temporalmente el alpha de los materiales (modo scanner).
+    /// </summary>
+    void ChangeMaterialProperty()
     {
-        input.Disable();
-    }
+        foreach (var material in targetMaterial)
+        {
+            material.SetFloat("_Alpha", 1.0f);
+        }
 
-     void ChangeMaterialProperty()
-    {
-            Debug.Log("Cambiando propiedad del material");
-            
-            foreach (var material in targetMaterial)
-            {
-                material.SetFloat("_Alpha", 1.0f); // Cambia el valor de la propiedad
-            }
-
-            Invoke("ResetMaterialProperty", 5.0f); // Resetea la propiedad después de 1 segundo
+        Invoke("ResetMaterialProperty", 5.0f);
     }
 
     void ResetMaterialProperty()
     {
-            Debug.Log("Reseteando propiedad del material");
-
-            foreach (var material in targetMaterial)
-            {
-                material.SetFloat("_Alpha", 0.0f); // Cambia el valor de la propiedad
-            }
+        foreach (var material in targetMaterial)
+        {
+            material.SetFloat("_Alpha", 0.0f);
+        }
     }
 
     /// <summary>
-    /// Configura los inputs necesarios para el movimiento del personaje.
+    /// Asigna los inputs a sus respectivas acciones.
     /// </summary>
     void AssingInputs()
     {
@@ -110,75 +137,83 @@ public class Controller : MonoBehaviour
         input.Main.Scanner.performed += ctx => ChangeMaterialProperty();
     }
 
-
     /// <summary>
-    /// Se usa un Raycast para detectar la posición donde se hizo clic y mover al personaje.
+    /// Detecta el punto de clic y mueve al Kiwi. Si se detecta doble clic, se activa el sprint.
     /// </summary>
     void ClickToMove()
     {
         RaycastHit hit;
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, clickableLayer))
         {
+            float timeSinceLastClick = Time.time - lastClickTime;
+            lastClickTime = Time.time;
+
+            if (timeSinceLastClick <= doubleClickThreshold)
+            {
+                moveSpeed = sprintSpeed;
+                CancelInvoke(nameof(ResetSpeed));
+                Invoke(nameof(ResetSpeed), sprintDuration);
+            }
+
             targetPosition = hit.point;
-            moveDirection = (targetPosition - transform.position).normalized; // Guarda la dirección
+            moveDirection = (targetPosition - transform.position).normalized;
             isMoving = true;
+
+            if (clickEffect != null)
+            {
+                ParticleSystem effect = Instantiate(clickEffect, hit.point + Vector3.up * 0.1f, clickEffect.transform.rotation);
+                Destroy(effect.gameObject, effect.main.duration);
+            }
         }
     }
 
-    void 
-    FixedUpdate(){
+    /// <summary>
+    /// Restaura la velocidad normal del Kiwi después del sprint.
+    /// </summary>
+    void ResetSpeed()
+    {
+        moveSpeed = normalSpeed;
+    }
+
+    /// <summary>
+    /// Control principal del movimiento y del sonido de pasos.
+    /// </summary>
+    void FixedUpdate()
+    {
         isGrounded = Physics.Raycast(transform.position, Vector3.down, 1.1f, clickableLayer);
 
-        if (isGrounded){
+        if (isGrounded)
+        {
             transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
         }
 
-        if (isMoving){
+        if (isMoving)
+        {
             MoveCharacter();
 
             float movementDelta = (transform.position - lastPosition).magnitude;
 
-            if (isGrounded && movementDelta > movementDeltaLimit){
+            if (isGrounded && movementDelta > movementDeltaLimit)
+            {
                 footstepTimer += Time.fixedDeltaTime;
-                if (footstepTimer >= footstepInterval){
+                if (footstepTimer >= footstepInterval)
+                {
                     AudioManager.instance.PlayFootstep();
                     footstepTimer = 0f;
                 }
             }
-            else{
+            else
+            {
                 footstepTimer = 0f;
             }
-        }else{
+        }
+        else
+        {
             footstepTimer = 0f;
         }
 
         lastPosition = transform.position;
 
-        if (Vector3.Distance(transform.position, targetPosition) < 0.1f){
-            isMoving = false;
-        }
-
-
-    }
-
-    /// <summary>
-    /// Mueve al personaje en el suelo o en el aire.
-    /// </summary>
-    void MoveCharacter()
-    {
-        if (isGrounded)
-        {
-            // Movimiento normal en el suelo
-            Vector3 newPosition = Vector3.MoveTowards(rb.position, targetPosition, moveSpeed * Time.fixedDeltaTime);
-            rb.MovePosition(newPosition);
-        }
-        else
-        {
-            // Movimiento en el aire con menor control
-            rb.linearVelocity = new Vector3(moveDirection.x * moveSpeed * airControlFactor, rb.linearVelocity.y, moveDirection.z * moveSpeed * airControlFactor);
-        }
-
-        // Si ya llegó al objetivo, detiene el movimiento
         if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
         {
             isMoving = false;
@@ -186,7 +221,28 @@ public class Controller : MonoBehaviour
     }
 
     /// <summary>
-    /// Aplica un impulso en el eje Y para simular un salto.
+    /// Lógica de movimiento con control aéreo si el Kiwi está en el aire.
+    /// </summary>
+    void MoveCharacter()
+    {
+        if (isGrounded)
+        {
+            Vector3 newPosition = Vector3.MoveTowards(rb.position, targetPosition, moveSpeed * Time.fixedDeltaTime);
+            rb.MovePosition(newPosition);
+        }
+        else
+        {
+            rb.linearVelocity = new Vector3(moveDirection.x * moveSpeed * airControlFactor, rb.linearVelocity.y, moveDirection.z * moveSpeed * airControlFactor);
+        }
+
+        if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
+        {
+            isMoving = false;
+        }
+    }
+
+    /// <summary>
+    /// Aplica impulso hacia arriba para que el Kiwi salte.
     /// </summary>
     void Jump()
     {
@@ -197,7 +253,7 @@ public class Controller : MonoBehaviour
     }
 
     /// <summary>
-    /// Rota al personaje en dirección al objetivo.
+    /// Gira al personaje en dirección al destino de movimiento.
     /// </summary>
     void FaceTarget()
     {
