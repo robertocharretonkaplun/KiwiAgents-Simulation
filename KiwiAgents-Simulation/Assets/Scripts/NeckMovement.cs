@@ -32,7 +32,7 @@ public class NeckMovement : MonoBehaviour
         lastPosition = playerTransform.position; // Guardar última posición
 
         // 🔍 Debug para verificar si ahora detecta el movimiento correctamente
-        Debug.Log("Kiwi en movimiento: " + isMoving);
+        //Debug.Log("Kiwi en movimiento: " + isMoving);
 
         // Aplicar la animación según el estado
         if (isMoving)
