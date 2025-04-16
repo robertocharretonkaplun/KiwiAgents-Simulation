@@ -22,6 +22,7 @@ public class HiddenTreasure : MonoBehaviour
     /// Simula tierra volando durante la excavación.
     /// </summary>
     public ParticleSystem digParticles;
+    public ParticleSystem SmokeParticles;
 
     /// <summary>
     /// Sonido reproducido mientras se excava.
@@ -120,8 +121,10 @@ public class HiddenTreasure : MonoBehaviour
         // Reproducir partículas si están asignadas
         if (digParticles != null)
         {
+            SmokeParticles.Stop(); // Asegura que reinicia
             digParticles.Stop(); // Asegura que reinicia
             digParticles.Play();
+            SmokeParticles.Play();
         }
 
         // Esperar el tiempo que toma excavar
