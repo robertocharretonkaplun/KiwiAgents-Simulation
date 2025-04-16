@@ -1,10 +1,9 @@
 using UnityEngine;
 using System.Collections;
 
-public 
-class 
-MusicManager : MonoBehaviour{
-        // Singleton
+public class MusicManager : MonoBehaviour
+{
+    // Singleton
     public static MusicManager Instance { get; private set; }
 
     [Header("Configuración de Música")]
@@ -19,7 +18,12 @@ MusicManager : MonoBehaviour{
     [SerializeField] private float TiempoMinEspera = 5f;  // Tiempo mínimo de espera entre canciones
     [SerializeField] private float TiempoMaxEspera = 15f; // Tiempo máximo de espera entre canciones    
 
+    [Header("Transiciones de Volumen")]
+    [SerializeField] private float fadeInDuration = 2f;   // Duración del efecto Fade In
+    [SerializeField] private float fadeOutDuration = 2f;  // Duración del efecto Fade Out
+
     private AudioSource audioSource;
+    private Coroutine fadeCoroutine;
 
     private void Awake()
     {
@@ -69,10 +73,17 @@ MusicManager : MonoBehaviour{
             {
                 // Selecciona una canción aleatoria del array y la reproduce.
                 int index = Random.Range(0, songs.Length);
-                // Asigna la canción seleccionada al AudioSource y la reproduce.
+                // Asigna la canción seleccionada al AudioSource.
                 audioSource.clip = songs[index];
-                // Reproduce la canción.
-                audioSource.Play();
+
+                // Inicia Fade In si ya había otra corutina activa
+                if (fadeCoroutine != null)
+                {
+                    StopCoroutine(fadeCoroutine);
+                }
+
+                // Reproduce la canción con fade in.
+                fadeCoroutine = StartCoroutine(FadeIn(fadeInDuration));
             }
         }
         else
@@ -84,12 +95,22 @@ MusicManager : MonoBehaviour{
                 if (Random.value > ProbabilidadDePausa)
                 {
                     // Pausa la canción para reanudarla más tarde.
-                    audioSource.Pause();
+                    if (fadeCoroutine != null)
+                    {
+                        StopCoroutine(fadeCoroutine);
+                    }
+
+                    fadeCoroutine = StartCoroutine(FadeOut(fadeOutDuration, true));
                 }
                 else
                 {
                     // Detiene la canción, reiniciando su reproducción en la siguiente ejecución.
-                    audioSource.Stop();
+                    if (fadeCoroutine != null)
+                    {
+                        StopCoroutine(fadeCoroutine);
+                    }
+
+                    fadeCoroutine = StartCoroutine(FadeOut(fadeOutDuration, false));
                 }
             }
         }
@@ -99,4 +120,50 @@ MusicManager : MonoBehaviour{
         InvokeRepeating("RandomMusicRoutine", Random.Range(TiempoMinEspera, TiempoMaxEspera), Random.Range(TiempoMinEspera, TiempoMaxEspera));
     }
 
+    // Corutina para reproducir una canción con fade in.
+    IEnumerator FadeIn(float duration)
+    {
+        float targetVolume = 1f;  // Volumen objetivo al final del fade in
+        audioSource.volume = 0f;  // Comienza con el volumen en 0
+        audioSource.Play();       // Inicia la reproducción de la canción
+
+        // Espera un segundo antes de iniciar el fade in
+        float elapsed = 0f;
+        while (elapsed < duration) // Espera hasta que el tiempo de fade in se complete
+        {
+            // Interpolación del volumen desde 0 hasta el volumen objetivo
+            audioSource.volume = Mathf.Lerp(0f, targetVolume, elapsed / duration);
+            // Aumenta el tiempo transcurrido
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        audioSource.volume = targetVolume;
+    }
+
+    // Corutina para pausar o detener la canción con fade out.
+    IEnumerator FadeOut(float duration, bool pause)
+    {
+        // Si la canción no se está reproduciendo, no hace nada.
+        float startVolume = audioSource.volume; // Volumen inicial
+        float elapsed = 0f;                    
+
+        while (elapsed < duration)
+        {
+            audioSource.volume = Mathf.Lerp(startVolume, 0f, elapsed / duration);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        // Al finalizar el fade out, establece el volumen a 0.
+        audioSource.volume = 0f;
+
+        if (pause)
+        {
+            audioSource.Pause();
+        }
+        else
+        {
+            audioSource.Stop();
+        }
+    }
 }
