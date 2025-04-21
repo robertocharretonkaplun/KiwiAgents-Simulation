@@ -23,6 +23,11 @@ public class EnemyStateMachine : MonoBehaviour
     public float rangoVision = 10f;
     public float anguloVision = 60f;
 
+    [Header("Canvas de Exclamación")]
+    public float intervaloCanvas = 60f; // ⏱️ cada cuántos segundos aparece el canvas
+    private float tiempoCanvas = 0f;
+    private bool canvasVisible = false;
+
     private float tiempoDetectando = 0f;
     private bool revelado = false;
 
@@ -51,7 +56,21 @@ public class EnemyStateMachine : MonoBehaviour
         if (activarTemporizador && !revelado)
         {
             tiempoDetectando += Time.deltaTime;
+            tiempoCanvas += Time.deltaTime;
+
             Debug.Log($"⏱️ Esperando para revelar: {tiempoDetectando}");
+
+            // Mostrar/Ocultar el canvas cada X segundos
+            if (tiempoCanvas >= intervaloCanvas)
+            {
+                canvasVisible = !canvasVisible;
+                if (canvasVisible)
+                    ShowExclamation();
+                else
+                    HideExclamation();
+
+                tiempoCanvas = 0f;
+            }
 
             if (tiempoDetectando >= tiempoAntesDeRevelar)
             {
@@ -60,6 +79,7 @@ public class EnemyStateMachine : MonoBehaviour
                 ChangeState(revealedState);
                 activarTemporizador = false;
                 tiempoDetectando = 0f;
+                tiempoCanvas = 0f;
             }
         }
     }
@@ -73,6 +93,8 @@ public class EnemyStateMachine : MonoBehaviour
     {
         revelado = true;
         HideExclamation();
+        canvasVisible = false;
+        tiempoCanvas = 0f;
 
         if (modeloEnemigo != null)
         {

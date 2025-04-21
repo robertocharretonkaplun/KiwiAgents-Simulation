@@ -6729,8 +6729,9 @@ MonoBehaviour:
   tiempoAntesDeRevelar: 1.5
   activarTemporizador: 0
   detectionZone: {fileID: 69179410}
-  rangoVision: 10
+  rangoVision: 10.28
   anguloVision: 60
+  intervaloCanvas: 6
 --- !u!4 &665810181
 Transform:
   m_ObjectHideFlags: 0
