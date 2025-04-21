@@ -21270,6 +21270,10 @@ PrefabInstance:
       value: 147.36928
       objectReference: {fileID: 0}
     - target: {fileID: 2153395720864630984, guid: b403f86cc34d97547adcdd0883e589c7, type: 3}
+      propertyPath: Lens.FieldOfView
+      value: 19.455156
+      objectReference: {fileID: 0}
+    - target: {fileID: 2153395720864630984, guid: b403f86cc34d97547adcdd0883e589c7, type: 3}
       propertyPath: Target.TrackingTarget
       value: 
       objectReference: {fileID: 2014857701}
@@ -21338,12 +21342,32 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6936446523736118668, guid: b403f86cc34d97547adcdd0883e589c7, type: 3}
+      propertyPath: Lens.FieldOfView
+      value: 19.455156
+      objectReference: {fileID: 0}
+    - target: {fileID: 6936446523736118668, guid: b403f86cc34d97547adcdd0883e589c7, type: 3}
       propertyPath: Target.TrackingTarget
       value: 
       objectReference: {fileID: 2014857701}
+    - target: {fileID: 8047820461670506165, guid: b403f86cc34d97547adcdd0883e589c7, type: 3}
+      propertyPath: field of view
+      value: 19.455156
+      objectReference: {fileID: 0}
+    - target: {fileID: 8047820461670506165, guid: b403f86cc34d97547adcdd0883e589c7, type: 3}
+      propertyPath: m_FocalLength
+      value: 70
+      objectReference: {fileID: 0}
+    - target: {fileID: 8068403881009858071, guid: b403f86cc34d97547adcdd0883e589c7, type: 3}
+      propertyPath: maxZoom
+      value: 95
+      objectReference: {fileID: 0}
     - target: {fileID: 8068403881009858071, guid: b403f86cc34d97547adcdd0883e589c7, type: 3}
       propertyPath: zoomMultiplier
       value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 8068403881009858071, guid: b403f86cc34d97547adcdd0883e589c7, type: 3}
+      propertyPath: isFreeCamActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8420812355126232445, guid: b403f86cc34d97547adcdd0883e589c7, type: 3}
       propertyPath: m_Name
@@ -28135,7 +28159,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 64.010765
+  field of view: 19.455156
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
