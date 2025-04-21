@@ -6853,11 +6853,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2296708124102606541, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
       propertyPath: vignettePower
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2296708124102606541, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
       propertyPath: vignetteIntensity
-      value: 3
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2296708124102606541, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
       propertyPath: fullScreenMaterial

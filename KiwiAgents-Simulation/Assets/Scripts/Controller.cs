@@ -110,6 +110,8 @@ public class Controller : MonoBehaviour
             Invoke("ResetMaterialProperty", VHSShaderTime); // Resetea la propiedad después de 1 segundo
     }
 
+    
+
     /// <summary>
     /// Resetea la propiedad del material después de un tiempo.
     /// </summary>
