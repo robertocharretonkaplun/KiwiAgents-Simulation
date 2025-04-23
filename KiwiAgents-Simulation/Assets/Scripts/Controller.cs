@@ -48,7 +48,11 @@ public class Controller : MonoBehaviour
 
     [Header("Render Objects")]
     public Material[] targetMaterial;
-    public string propertyName = "_Alpha";
+    public Material fullScreenMaterial;
+    public string propertyName = "_Alpha"; // Nombre de la propiedad del shader
+    public float VHSShaderTime = 5.0f; // Tiempo de transición del shader VHS
+    public float vignettePower;
+    public float vignetteIntensity;
 
     private Vector3 targetPosition;
     private Vector3 moveDirection;
@@ -86,10 +90,17 @@ public class Controller : MonoBehaviour
         lastPosition = transform.position;
         normalSpeed = moveSpeed;
 
+        // Inicializa los materiales con el valor de la propiedad
         foreach (var material in targetMaterial)
         {
-            material.SetFloat("_Alpha", 0.0f);
+            material.SetFloat("_Alpha", 0.0f); // Cambia el valor de la propiedad
         }
+
+
+        // Inicializa la propiedad del material de pantalla completa
+        fullScreenMaterial.SetFloat("_VignettePower", 0.0f);
+        fullScreenMaterial.SetFloat("_VignetteIntensity", 0.0f);
+
     }
 
     /// <summary>
@@ -111,20 +122,41 @@ public class Controller : MonoBehaviour
     /// </summary>
     void ChangeMaterialProperty()
     {
-        foreach (var material in targetMaterial)
-        {
-            material.SetFloat("_Alpha", 1.0f);
-        }
+        Debug.Log("Cambiando propiedad del material");
+           
+            foreach (var material in targetMaterial)
+            {
+                material.SetFloat("_Alpha", 1.0f); // Cambia el valor de la propiedad
+            }
 
-        Invoke("ResetMaterialProperty", 5.0f);
+
+            // Cambia la propiedad del material de pantalla completa
+            fullScreenMaterial.SetFloat("_VignettePower", vignettePower);
+            fullScreenMaterial.SetFloat("_VignetteIntensity", vignetteIntensity);
+
+
+
+
+            Invoke("ResetMaterialProperty", VHSShaderTime); // Resetea la propiedad después de 1 segundo
     }
 
     void ResetMaterialProperty()
     {
-        foreach (var material in targetMaterial)
-        {
-            material.SetFloat("_Alpha", 0.0f);
-        }
+       Debug.Log("Reseteando propiedad del material");
+
+
+
+
+            foreach (var material in targetMaterial)
+            {
+                material.SetFloat("_Alpha", 0.0f); // Cambia el valor de la propiedad
+            }
+
+
+            // Resetea la propiedad del material de pantalla completa
+            fullScreenMaterial.SetFloat("_VignettePower", 0.0f);
+            fullScreenMaterial.SetFloat("_VignetteIntensity", 0.0f);
+
     }
 
     /// <summary>
