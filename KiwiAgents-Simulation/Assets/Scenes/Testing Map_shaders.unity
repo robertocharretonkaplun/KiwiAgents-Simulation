@@ -869,11 +869,18 @@ MonoBehaviour:
   playerTransform: {fileID: 39836793}
   idleRotationSpeed: 15
   idleRotationAngle: 30
+  idleBounceHeight: 10
+  idleBounceSpeed: 2.5
   walkBounceSpeed: 3
   walkBounceHeight: 1.5
   walkTiltSpeed: 1.2
   walkTiltAngle: 2.5
   movementThreshold: 0.01
+  relaxT: 0
+  idleRelaxDelay: 5
+  relaxedSpeedFactor: 0.2
+  relaxedAngleFactor: 0.3
+  relaxedBounceFactor: 0.3
 --- !u!4 &39836793 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2529006484838060323, guid: 9eb84a8672d7abd4a891d24bf7e06061, type: 3}
@@ -4618,8 +4625,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 424800599}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.035427865, y: 0.9079903, z: -0.4100541, w: 0.07844857}
-  m_LocalPosition: {x: 67.43247, y: 44.661842, z: 25.991774}
+  m_LocalRotation: {x: 0.40737608, y: -0.1299533, z: 0.05868772, w: 0.9020602}
+  m_LocalPosition: {x: 18.67116, y: 44.661842, z: 31.045816}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6994,7 +7001,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 227669728265591052, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 71
+      value: 12.8
       objectReference: {fileID: 0}
     - target: {fileID: 227669728265591052, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
       propertyPath: m_LocalPosition.y
@@ -7002,7 +7009,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 227669728265591052, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 5.5
+      value: 51
       objectReference: {fileID: 0}
     - target: {fileID: 227669728265591052, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
       propertyPath: m_LocalRotation.w
@@ -8705,8 +8712,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 816843784}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.035427865, y: 0.9079903, z: -0.4100541, w: 0.07844857}
-  m_LocalPosition: {x: 67.43247, y: 44.661842, z: 25.991774}
+  m_LocalRotation: {x: 0.40737608, y: -0.1299533, z: 0.05868772, w: 0.9020602}
+  m_LocalPosition: {x: 18.67116, y: 44.661842, z: 31.045816}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -10676,6 +10683,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Kiwi_Cel
       objectReference: {fileID: 0}
+    - target: {fileID: 3593727058820848743, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4247802187221726808, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -10688,6 +10699,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9122530828213374217, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: playerTransform
+      value: 
+      objectReference: {fileID: 516576259}
     m_RemovedComponents:
     - {fileID: 2296708124102606541, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
     - {fileID: 4992620500013314938, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
@@ -10821,7 +10836,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.16666667
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 0}
+  m_NavMeshData: {fileID: 23800000, guid: ea7bd2f47ea39c941ac26b54c45501d9, type: 2}
   m_BuildHeightMesh: 0
 --- !u!1001 &1035245047
 PrefabInstance:
@@ -12845,6 +12860,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Kiwi_Retro
       objectReference: {fileID: 0}
+    - target: {fileID: 3593727058820848743, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6384646803161804883, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -12857,6 +12876,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 9122530828213374217, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: playerTransform
+      value: 
+      objectReference: {fileID: 1216884144}
     m_RemovedComponents:
     - {fileID: 2296708124102606541, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
     - {fileID: 4992620500013314938, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
@@ -16739,10 +16762,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Kiwi Normal
       objectReference: {fileID: 0}
+    - target: {fileID: 3593727058820848743, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7820039276939910821, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9122530828213374217, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
+      propertyPath: playerTransform
+      value: 
+      objectReference: {fileID: 1554520808}
     m_RemovedComponents:
     - {fileID: 2296708124102606541, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
     - {fileID: 4992620500013314938, guid: b6c3bc5c302251b4e8e6e7cb7c3f0d2e, type: 3}
