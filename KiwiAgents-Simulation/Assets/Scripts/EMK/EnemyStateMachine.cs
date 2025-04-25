@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class EnemyStateMachine : MonoBehaviour
 {
@@ -13,7 +12,7 @@ public class EnemyStateMachine : MonoBehaviour
     public Transform player;
 
     [Header("Control de Escala y Visibilidad")]
-    public Vector3 escalaOriginal = new Vector3(40.64f, 40.64f, 40.64f);
+    public Vector3 escalaOriginal = new Vector3(40.64f, 40.64f, 40.64f); // ✅
 
     [Header("Temporizador de Revelación")]
     public float tiempoAntesDeRevelar = 10f;
@@ -25,13 +24,12 @@ public class EnemyStateMachine : MonoBehaviour
     public float anguloVision = 60f;
 
     [Header("Canvas de Exclamación")]
-    public float intervaloCanvas = 60f;
+    public float intervaloCanvas = 60f; // ⏱️ cada cuántos segundos aparece el canvas
     private float tiempoCanvas = 0f;
     private bool canvasVisible = false;
 
     private float tiempoDetectando = 0f;
     private bool revelado = false;
-    private Coroutine exclamacionCoroutine;
 
     void Start()
     {
@@ -42,7 +40,7 @@ public class EnemyStateMachine : MonoBehaviour
         currentState = idleState;
 
         if (modeloEnemigo != null)
-            modeloEnemigo.transform.localScale = Vector3.zero;
+            modeloEnemigo.transform.localScale = Vector3.zero; // Inicia invisible
 
         if (detectionZone != null)
             detectionZone.enemyFSM = this;
@@ -60,17 +58,23 @@ public class EnemyStateMachine : MonoBehaviour
             tiempoDetectando += Time.deltaTime;
             tiempoCanvas += Time.deltaTime;
 
-            
+            Debug.Log($"⏱️ Esperando para revelar: {tiempoDetectando}");
 
+            // Mostrar/Ocultar el canvas cada X segundos
             if (tiempoCanvas >= intervaloCanvas)
             {
-                ShowExclamation(); // Ahora solo muestra, se ocultará automáticamente
+                canvasVisible = !canvasVisible;
+                if (canvasVisible)
+                    ShowExclamation();
+                else
+                    HideExclamation();
+
                 tiempoCanvas = 0f;
             }
 
             if (tiempoDetectando >= tiempoAntesDeRevelar)
             {
-                
+                Debug.Log("💥 Tiempo cumplido: revelando");
                 RevealEnemy();
                 ChangeState(revealedState);
                 activarTemporizador = false;
@@ -95,36 +99,18 @@ public class EnemyStateMachine : MonoBehaviour
         if (modeloEnemigo != null)
         {
             modeloEnemigo.transform.localScale = escalaOriginal;
-            
+            Debug.Log($"📏 Escala restaurada a: {escalaOriginal}");
         }
     }
 
     public void ShowExclamation()
     {
-        if (exclamacionUI != null)
-        {
-            exclamacionUI.SetActive(true);
-
-            // Cancelar corrutina anterior si ya se estaba ejecutando
-            if (exclamacionCoroutine != null)
-                StopCoroutine(exclamacionCoroutine);
-
-            // Iniciar nueva corrutina para ocultar en 3 segundos
-            exclamacionCoroutine = StartCoroutine(EsconderExclamacionEnTiempo(3f));
-        }
+        if (exclamacionUI != null) exclamacionUI.SetActive(true);
     }
 
     public void HideExclamation()
     {
-        if (exclamacionUI != null)
-            exclamacionUI.SetActive(false);
-    }
-
-    private IEnumerator EsconderExclamacionEnTiempo(float segundos)
-    {
-        yield return new WaitForSeconds(segundos);
-        HideExclamation();
-        exclamacionCoroutine = null;
+        if (exclamacionUI != null) exclamacionUI.SetActive(false);
     }
 
     public bool IsPlayerInSight()
