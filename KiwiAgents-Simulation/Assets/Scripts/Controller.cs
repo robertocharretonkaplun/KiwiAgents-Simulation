@@ -16,6 +16,15 @@ public class Controller : MonoBehaviour
     public float airControlFactor = 0.5f; // Control en el aire
     float lookRotationSpeed = 8f;
 
+    [Header("Render Objects")]
+    public Material[] targetMaterial;
+    public Material fullScreenMaterial;
+    public string propertyName = "_Alpha"; // Nombre de la propiedad del shader
+    public float VHSShaderTime = 5.0f; // Tiempo de transición del shader VHS
+    public float vignettePower;
+    public float vignetteIntensity;
+
+
     private Vector3 targetPosition;
     private Vector3 moveDirection; // Nueva variable para almacenar dirección de movimiento
     public bool isMoving = false;
@@ -39,6 +48,17 @@ public class Controller : MonoBehaviour
         rb.freezeRotation = true; // Bloquea la rotación del Rigidbody
         AssingInputs();
         targetPosition = transform.position;
+
+        // Inicializa los materiales con el valor de la propiedad
+        foreach (var material in targetMaterial)
+        {
+            material.SetFloat("_Alpha", 0.0f); // Cambia el valor de la propiedad
+        }
+
+        // Inicializa la propiedad del material de pantalla completa
+        fullScreenMaterial.SetFloat("_VignettePower", 0.0f);
+        fullScreenMaterial.SetFloat("_VignetteIntensity", 0.0f);
+
     }
 
     private void Update()
@@ -67,7 +87,47 @@ public class Controller : MonoBehaviour
     {
         input.Main.Move.performed += ctx => ClickToMove();
         input.Main.Jump.performed += ctx => Jump();
+        input.Main.Scanner.performed += ctx => ChangeMaterialProperty();
     }
+
+    /// <summary>
+    /// Cambia la propiedad del material al hacer clic en el botón de escáner.
+    /// </summary>
+    void ChangeMaterialProperty()
+    {
+            Debug.Log("Cambiando propiedad del material");
+           
+            foreach (var material in targetMaterial)
+            {
+                material.SetFloat("_Alpha", 1.0f); // Cambia el valor de la propiedad
+            }
+
+            // Cambia la propiedad del material de pantalla completa
+            fullScreenMaterial.SetFloat("_VignettePower", vignettePower);
+            fullScreenMaterial.SetFloat("_VignetteIntensity", vignetteIntensity);
+
+
+            Invoke("ResetMaterialProperty", VHSShaderTime); // Resetea la propiedad después de 1 segundo
+    }
+
+    /// <summary>
+    /// Resetea la propiedad del material después de un tiempo.
+    /// </summary>
+    void ResetMaterialProperty()
+    {
+            Debug.Log("Reseteando propiedad del material");
+
+
+            foreach (var material in targetMaterial)
+            {
+                material.SetFloat("_Alpha", 0.0f); // Cambia el valor de la propiedad
+            }
+
+            // Resetea la propiedad del material de pantalla completa
+            fullScreenMaterial.SetFloat("_VignettePower", 0.0f);
+            fullScreenMaterial.SetFloat("_VignetteIntensity", 0.0f);
+    }
+
 
     /// <summary>
     /// Se usa un Raycast para detectar la posición donde se hizo clic y mover al personaje.
