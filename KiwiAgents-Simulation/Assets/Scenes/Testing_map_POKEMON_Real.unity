@@ -2645,7 +2645,8 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8072967262456100876, guid: 9eb84a8672d7abd4a891d24bf7e06061, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 2529006484838060323, guid: 9eb84a8672d7abd4a891d24bf7e06061, type: 3}
@@ -2655,6 +2656,9 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 69179409}
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8382171492917268995, guid: 9eb84a8672d7abd4a891d24bf7e06061, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1823040033}
     - targetCorrespondingSourceObject: {fileID: 8382171492917268995, guid: 9eb84a8672d7abd4a891d24bf7e06061, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1823040032}
@@ -19928,6 +19932,22 @@ MonoBehaviour:
   walkTiltSpeed: 1.2
   walkTiltAngle: 2.5
   movementThreshold: 0.01
+--- !u!114 &1823040033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1823040018}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d564e278b3b49bb428fad94289e73195, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObjectFollow: {fileID: 669683498}
+  stopDistance: 8
+  detectionZone: {fileID: 69179410}
+  enemyStateMachine: {fileID: 665810180}
 --- !u!4 &1824569205 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1690695549501021973, guid: 9eb84a8672d7abd4a891d24bf7e06061, type: 3}
